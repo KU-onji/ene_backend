@@ -50,7 +50,7 @@ def navi_bar() -> rx.Component:
             rx.hstack(
                 rx.text("KU-onji", font_size="1.5em"),
                 rx.spacer(),
-                rx.button("", icon="settings"),
+                rx.button("Settings", variant="soft", on_click=rx.redirect("/")),
             ),
             align="center",
             justify="between",
@@ -61,5 +61,8 @@ def navi_bar() -> rx.Component:
         width="100%",
         top="0px",
         z_index="500",
-        background="rgba(255, 255, 255, 0.90)",
+        background=rx.color_mode_cond(
+            "rgba(15, 15, 15, 0.90)",
+            "rgba(255, 255, 255, 0.90)",
+        ),
     )
