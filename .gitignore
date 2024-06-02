@@ -1,8 +1,9 @@
 # files to ignore
 /.venv/
-*/__pycache__/*
+**/__pycache__/**
 .python-version
-*/pdfs/*
+/.web/
+/assets/
 
 # except for these
 !.gitignore
