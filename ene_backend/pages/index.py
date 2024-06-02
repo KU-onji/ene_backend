@@ -6,7 +6,7 @@ from ene_backend import styles
 from ene_backend.templates import template
 
 
-@template(route="/", title="Home")
+@template(route="/home", title="Home")
 def index() -> rx.Component:
     """The home page.
 
