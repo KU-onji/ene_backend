@@ -1,0 +1,11 @@
+# files to ignore
+/.venv/
+*/__pycache__/*
+.python-version
+*/pdfs/*
+
+# except for these
+!.gitignore
+!/src/*.py
+!README.md
+!.pre-commit-config.yaml
