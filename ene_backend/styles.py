@@ -49,3 +49,9 @@ header_style = {
     "top": "0px",
     "z_index": "500",
 }
+
+message_style = {
+    "display": "inline-block",
+    "padding_x": "1em",
+    "border_radius": border_radius,
+}
