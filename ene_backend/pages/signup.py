@@ -5,8 +5,8 @@ import reflex as rx
 from ene_backend.templates import template
 
 
-@template(route="/", title="Login")
-def login_single_thirdparty() -> rx.Component:
+@template(route="/signup", title="Signup")
+def signup_single_thirdparty() -> rx.Component:
     return rx.center(
         rx.card(
             rx.vstack(
@@ -18,10 +18,21 @@ def login_single_thirdparty() -> rx.Component:
                         border_radius="25%",
                     ),
                     rx.heading(
-                        "ログイン",
+                        "アカウントを作成",
                         size="6",
                         as_="h2",
                         text_align="left",
+                        width="100%",
+                    ),
+                    rx.hstack(
+                        rx.text(
+                            "すでにアカウントをお持ちですか？",
+                            size="3",
+                            text_align="left",
+                        ),
+                        rx.link("サインイン", href="/", size="3"),
+                        spacing="2",
+                        opacity="0.8",
                         width="100%",
                     ),
                     direction="column",
@@ -49,18 +60,11 @@ def login_single_thirdparty() -> rx.Component:
                     width="100%",
                 ),
                 rx.vstack(
-                    rx.hstack(
-                        rx.text(
-                            "パスワード",
-                            size="3",
-                            weight="medium",
-                        ),
-                        rx.link(
-                            "パスワードを忘れた場合",
-                            href="#",
-                            size="3",
-                        ),
-                        justify="between",
+                    rx.text(
+                        "パスワード",
+                        size="3",
+                        weight="medium",
+                        text_align="left",
                         width="100%",
                     ),
                     rx.input(
@@ -70,25 +74,42 @@ def login_single_thirdparty() -> rx.Component:
                         size="3",
                         width="100%",
                     ),
+                    justify="start",
                     spacing="2",
                     width="100%",
                 ),
-                rx.button("ログイン", size="3", width="100%", on_click=rx.redirect("/home")),
-                rx.center(
+                rx.vstack(
                     rx.text(
-                        "新規登録は",
+                        "パスワード（再入力）",
                         size="3",
+                        weight="medium",
                         text_align="left",
+                        width="100%",
                     ),
-                    rx.link("こちら", href="/signup", size="3"),
-                    opacity="0.8",
-                    direction="row",
+                    rx.input(
+                        rx.input.slot(rx.icon("lock")),
+                        placeholder="パスワード（再入力）",
+                        type="password",
+                        size="3",
+                        width="100%",
+                    ),
+                    justify="start",
+                    spacing="2",
                     width="100%",
                 ),
+                rx.box(
+                    rx.checkbox(
+                        "利用規約に同意しました",
+                        default_checked=True,
+                        spacing="2",
+                    ),
+                    width="100%",
+                ),
+                rx.button("新規登録", size="3", width="100%", on_click=rx.redirect("/home")),
                 rx.hstack(
                     rx.divider(margin="0"),
                     rx.text(
-                        "他のアカウントでログイン",
+                        "他のアカウントで新規登録",
                         white_space="nowrap",
                         weight="medium",
                     ),
@@ -103,7 +124,7 @@ def login_single_thirdparty() -> rx.Component:
                         height="auto",
                         border_radius="25%",
                     ),
-                    "Googleでログイン",
+                    "Googleで新規登録",
                     variant="outline",
                     size="3",
                     width="100%",
