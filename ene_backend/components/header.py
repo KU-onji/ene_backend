@@ -35,9 +35,11 @@ def navi_bar() -> rx.Component:
     return rx.box(
         rx.hstack(
             # Logo (tentative)
-            rx.color_mode_cond(
-                rx.image(src="/reflex_white.svg", height="2em"),
-                rx.image(src="/reflex_black.svg", height="2em"),
+            rx.box(
+                rx.text("ene", font_size="2em", color="iris", align="center"),
+                padding_x="1em",
+                border_radius=styles.border_radius,
+                background=rx.color_mode_cond("lightgray", "black"),
             ),
             # Clock (to be implemented)
             rx.center(
@@ -48,7 +50,7 @@ def navi_bar() -> rx.Component:
                 ),
                 background=rx.color_mode_cond("lightgray", "black"),
                 padding="0.5em",
-                border_radius="0.5em",
+                border_radius=styles.border_radius,
             ),
             # UserName and config button
             rx.hstack(
@@ -64,6 +66,7 @@ def navi_bar() -> rx.Component:
                     size="4",
                     on_click=rx.redirect("/home"),
                     color_scheme="iris",
+                    border_radius=styles.border_radius,
                 ),
             ),
             align="center",
