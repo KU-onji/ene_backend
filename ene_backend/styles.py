@@ -12,12 +12,10 @@ hover_accent_bg = {"_hover": {"background_color": accent_color}}
 content_width_vw = "90vw"
 sidebar_width = "20em"
 
-template_page_style = {"padding_top": "5em", "padding_x": ["auto", "2em"], "flex": "1"}
+template_page_style = {"padding_top": "7em", "flex": "1"}
 
 template_content_style = {
     "border_radius": border_radius,
-    "padding": "1em",
-    "margin_bottom": "2em",
     "min_height": "90vh",
 }
 
@@ -42,4 +40,12 @@ markdown_style = {
         text_decoration="underline",
         text_decoration_color=accent_text_color,
     ),
+}
+
+header_style = {
+    "position": "fixed",
+    "padding": "1em 2em",
+    "width": "100%",
+    "top": "0px",
+    "z_index": "500",
 }
