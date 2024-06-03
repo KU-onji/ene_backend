@@ -3,7 +3,7 @@ from datetime import datetime
 
 import reflex as rx
 
-# from ene_backend import styles
+from ene_backend import styles
 
 
 class CurrentTimeState(rx.State):
@@ -34,35 +34,45 @@ def navi_bar() -> rx.Component:
     """
     return rx.box(
         rx.hstack(
-            # Logo
+            # Logo (tentative)
             rx.color_mode_cond(
-                rx.image(src="/reflex_black.svg", height="2em"),
                 rx.image(src="/reflex_white.svg", height="2em"),
+                rx.image(src="/reflex_black.svg", height="2em"),
             ),
-            # Clock
+            # Clock (to be implemented)
             rx.center(
-                rx.heading(CurrentTimeState.current_time, font_size="1.5em"),
-                bg="lightgray",
+                rx.heading(
+                    CurrentTimeState.current_time,
+                    font_size="2em",
+                    color_scheme=rx.color_mode_cond("black", "lightgray"),
+                ),
+                background=rx.color_mode_cond("lightgray", "black"),
                 padding="0.5em",
                 border_radius="0.5em",
             ),
             # UserName and config button
             rx.hstack(
-                rx.text("KU-onji", font_size="1.5em"),
+                rx.text(
+                    "KU-onji",  # tentative
+                    font_size="2em",
+                    color=rx.color_mode_cond("white", "black"),
+                ),
                 rx.spacer(),
-                rx.button("Settings", variant="soft", on_click=rx.redirect("/")),
+                rx.button(
+                    rx.icon(tag="settings"),
+                    variant="solid",
+                    size="4",
+                    on_click=rx.redirect("/home"),
+                    color_scheme="iris",
+                ),
             ),
             align="center",
             justify="between",
             padding="1em 2em",
         ),
-        position="fixed",
-        padding="1em",
-        width="100%",
-        top="0px",
-        z_index="500",
         background=rx.color_mode_cond(
-            "rgba(15, 15, 15, 0.90)",
-            "rgba(255, 255, 255, 0.90)",
+            "rgba(15, 15, 15, 0.85)",
+            "rgba(255, 255, 255, 0.85)",
         ),
+        **styles.header_style,
     )
