@@ -53,5 +53,8 @@ header_style = {
 message_style = {
     "display": "inline-block",
     "padding_x": "1em",
+    "color": "black",
     "border_radius": border_radius,
 }
+
+graph_style = {"background_color": rx.color("cyan", 4), **message_style}

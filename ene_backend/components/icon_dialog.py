@@ -18,7 +18,6 @@ def icon_dialog(dialog: tuple[str, str]) -> rx.Component:
             rx.markdown(
                 user_message,
                 background_color=rx.color("mint", 4),
-                color=rx.color("black"),
                 **styles.message_style,
             ),
             text_align="right",
@@ -30,7 +29,6 @@ def icon_dialog(dialog: tuple[str, str]) -> rx.Component:
             rx.markdown(
                 system_response,
                 background_color=rx.color("gray", 5),
-                color=rx.color("black"),
                 **styles.message_style,
             ),
             text_align="left",
