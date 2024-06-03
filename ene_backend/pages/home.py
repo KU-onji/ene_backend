@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ene_backend.components.icon_dialog import icon_dialog
+from ene_backend.components import icon_dialog, suggestion
 from ene_backend.templates import template
 
 
@@ -26,7 +26,7 @@ def content_field(width: str, height: str, *contents: rx.Component) -> rx.Compon
 def left_box() -> rx.Component:
     return rx.box(
         rx.vstack(
-            content_field("100%", "60%"),
+            content_field("100%", "60%", suggestion.suggestion()),
             content_field("100%", "40%"),
             justify="center",
             align="center",
@@ -45,8 +45,8 @@ def right_box() -> rx.Component:
         content_field(
             "100%",
             "70%",
-            icon_dialog(("Hello", "Hi")),
-            icon_dialog(("How are you?", "I'm fine.")),
+            icon_dialog.icon_dialog(("Hello", "Hi")),
+            icon_dialog.icon_dialog(("How are you?", "I'm fine.")),
         ),
         background=rx.color_mode_cond("lightgray", "darkgray"),
         padding="1em",
