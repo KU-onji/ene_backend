@@ -2,6 +2,7 @@
 
 import reflex as rx
 
+from ene_backend.state.auth import AuthState
 from ene_backend.templates import template
 
 
@@ -51,6 +52,7 @@ def signup_single_thirdparty() -> rx.Component:
                     rx.input(
                         rx.input.slot(rx.icon("mail")),
                         placeholder="メールアドレス",
+                        on_blur=AuthState.set_address,
                         type="email",
                         size="3",
                         width="100%",
@@ -70,6 +72,7 @@ def signup_single_thirdparty() -> rx.Component:
                     rx.input(
                         rx.input.slot(rx.icon("lock")),
                         placeholder="パスワード",
+                        on_blur=AuthState.set_password,
                         type="password",
                         size="3",
                         width="100%",
@@ -89,6 +92,7 @@ def signup_single_thirdparty() -> rx.Component:
                     rx.input(
                         rx.input.slot(rx.icon("lock")),
                         placeholder="パスワード（再入力）",
+                        on_blur=AuthState.set_confirm_password,
                         type="password",
                         size="3",
                         width="100%",
@@ -105,7 +109,7 @@ def signup_single_thirdparty() -> rx.Component:
                     ),
                     width="100%",
                 ),
-                rx.button("新規登録", size="3", width="100%", on_click=rx.redirect("/home")),
+                rx.button("新規登録", on_click=AuthState.signup, size="3", width="100%"),
                 rx.hstack(
                     rx.divider(margin="0"),
                     rx.text(
