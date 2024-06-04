@@ -1,12 +1,13 @@
-# files to ignore
-/.venv/
-**/__pycache__/**
-.python-version
-/.web/
-/assets/
-
-# except for these
 !.gitignore
+!.pre-commit-config.yaml
 !/src/*.py
 !README.md
-!.pre-commit-config.yaml
+**/__pycache__/**
+*.db
+*.py[cod]
+.python-version
+.web
+/.venv/
+/.web/
+/assets/
+__pycache__/
