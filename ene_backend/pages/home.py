@@ -9,7 +9,7 @@ from ene_backend.templates import template
 def content_field(
     width: str,
     height: str,
-    align: Literal["baseline", "center", "end", "start", "strech"],
+    align: Literal["baseline", "center", "end", "start", "stretch"],
     justify: Literal["between", "center", "end", "start"],
     *contents: rx.Component,
 ) -> rx.Component:
@@ -17,10 +17,11 @@ def content_field(
         rx.vstack(
             *contents,
             spacing="2",
-            width="inherit",
-            height="inherit",
-            align_self=align,
-            justify_self=justify,
+            width="100%",
+            height="100%",
+            align=align,
+            justify=justify,
+            _hover={"background": "green"},
         ),
         border_radius="0.5em",
         padding="1em",
@@ -35,7 +36,7 @@ def left_box() -> rx.Component:
     return rx.box(
         rx.vstack(
             content_field("100%", "40%", "center", "between", suggestion.suggestion()),
-            content_field("100%", "60%", "end", "center", my_calendar.calendar_view()),
+            content_field("100%", "60%", "stretch", "start", my_calendar.calendar_view()),
             justify="center",
             align="start",
             width="100%",
