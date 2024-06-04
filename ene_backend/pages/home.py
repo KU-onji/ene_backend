@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ene_backend.components import icon_dialog, suggestion
+from ene_backend.components import calendar, icon_dialog, suggestion
 from ene_backend.templates import template
 
 
@@ -27,7 +27,7 @@ def left_box() -> rx.Component:
     return rx.box(
         rx.vstack(
             content_field("100%", "60%", suggestion.suggestion()),
-            content_field("100%", "40%"),
+            content_field("100%", "40%", calendar.calendar()),
             justify="center",
             align="center",
             width="100%",
