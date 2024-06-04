@@ -24,14 +24,15 @@ class Calendar(rx.Component):
     active_end_date: rx.Var[datetime]
     allow_partial_range: rx.Var[bool]
     calendar_type: rx.Var[LiteralCalendarType]
+    day_short: rx.Var[str]
     default_value: rx.Var[str]
     default_view: rx.Var[LiteralDefaultView] = "month"
     go_to_range_start_on_select: rx.Var[bool]
-    locale: rx.Var[str]
+    locale: rx.Var[str] = "ja-JP"
     max_date: rx.Var[str]
     max_detail: rx.Var[LiteralDefaultView]
     min_date: rx.Var[str]
-    min_detail: rx.Var[LiteralDefaultView]
+    min_detail: rx.Var[LiteralDefaultView] = "year"
     navigation_aria_label: rx.Var[str]
     navigation_aria_live: rx.Var[str]
     navigation_label: rx.Var[str]
@@ -48,8 +49,8 @@ class Calendar(rx.Component):
     show_double_view: rx.Var[bool]
     show_fixed_number_of_weeks: rx.Var[bool]
     show_navigation: rx.Var[bool]
-    show_neighouring_century: rx.Var[bool]
-    show_neighbouring_decade: rx.Var[bool]
+    show_neighouring_century: rx.Var[bool] = False
+    show_neighbouring_decade: rx.Var[bool] = False
     show_neighbouring_month: rx.Var[bool]
     show_week_numbers: rx.Var[bool]
     value: rx.Var[str]

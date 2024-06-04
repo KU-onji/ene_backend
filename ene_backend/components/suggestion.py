@@ -18,22 +18,9 @@ def plan_suggestion() -> rx.Component:
             max_width="80%",
             _hover={"transform": "scale(1.1)"},
         ),
-        rx.box(
-            rx.text(
-                "ETA: 18h",
-                background_color=rx.color("iris", 4),
-                text_align="center",
-                **styles.message_style,
-            ),
-            text_align="center",
-            padding_x="1em",
-            align_self="flex-end",
-            _hover={"transform": "scale(1.1)"},
-        ),
         width="inherit",
-        padding="1em",
-        justify="between",
         align="start",
+        justify="between",
     )
 
 
@@ -66,11 +53,30 @@ def draw_graph() -> rx.Component:
             _hover={"transform": "scale(1.1)"},
         )
 
-    return rx.hstack(
-        rx.foreach(Task.tasks, task_box),
+    return rx.vstack(
+        rx.box(
+            rx.text(
+                "ETA: 18h",
+                background_color=rx.color("iris", 4),
+                text_align="center",
+                **styles.message_style,
+            ),
+            text_align="center",
+            padding_x="1em",
+            align_self="center",
+            justify_self="flex-end",
+            _hover={"transform": "scale(1.1)"},
+        ),
+        rx.hstack(
+            rx.foreach(Task.tasks, task_box),
+            width="inherit",
+            justify="between",
+            align="center",
+        ),
         width="inherit",
+        height="inherit",
+        align="start",
         justify="between",
-        align="center",
         _hover={"background": "cyan"},
     )
 
@@ -83,5 +89,5 @@ def suggestion() -> rx.Component:
         height="inherit",
         padding="1em",
         justify="between",
-        align="center",
+        align="stretch",
     )

@@ -1,18 +1,26 @@
+from typing import Literal
+
 import reflex as rx
 
-from ene_backend.components import calendar, icon_dialog, suggestion
+from ene_backend.components import icon_dialog, my_calendar, suggestion
 from ene_backend.templates import template
 
 
-def content_field(width: str, height: str, *contents: rx.Component) -> rx.Component:
+def content_field(
+    width: str,
+    height: str,
+    align: Literal["baseline", "center", "end", "start", "strech"],
+    justify: Literal["between", "center", "end", "start"],
+    *contents: rx.Component,
+) -> rx.Component:
     return rx.box(
         rx.vstack(
             *contents,
             spacing="2",
             width="inherit",
             height="inherit",
-            align="start",
-            justify="start",
+            align_self=align,
+            justify_self=justify,
         ),
         border_radius="0.5em",
         padding="1em",
@@ -26,10 +34,10 @@ def content_field(width: str, height: str, *contents: rx.Component) -> rx.Compon
 def left_box() -> rx.Component:
     return rx.box(
         rx.vstack(
-            content_field("100%", "60%", suggestion.suggestion()),
-            content_field("100%", "40%", calendar.calendar()),
+            content_field("100%", "40%", "center", "between", suggestion.suggestion()),
+            content_field("100%", "60%", "end", "center", my_calendar.calendar_view()),
             justify="center",
-            align="center",
+            align="start",
             width="100%",
             height="100%",
         ),
@@ -45,6 +53,8 @@ def right_box() -> rx.Component:
         content_field(
             "100%",
             "70%",
+            "start",
+            "start",
             icon_dialog.icon_dialog(("Hello", "Hi")),
             icon_dialog.icon_dialog(("How are you?", "I'm fine.")),
         ),
