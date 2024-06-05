@@ -77,7 +77,7 @@ def draw_graph() -> rx.Component:
         height="inherit",
         align="start",
         justify="between",
-        _hover={"background": "cyan"},
+        # _hover={"background": "cyan"},  # for debugging
     )
 
 

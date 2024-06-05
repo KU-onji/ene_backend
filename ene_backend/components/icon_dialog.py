@@ -42,5 +42,5 @@ def icon_dialog(dialog: tuple[str, str]) -> rx.Component:
         justify="between",
         align="stretch",
         spacing="2",
-        _hover={"background": "cyan"},
+        # _hover={"background": "cyan"},  # for debugging
     )
