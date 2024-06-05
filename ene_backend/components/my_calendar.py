@@ -55,10 +55,8 @@ def calendar_view() -> rx.Component:
             rx.text(CalendarState.month, justify="center", align="center"),
             rx.icon(tag="chevron-right", on_click=CalendarState.next_month()),
             width="100%",
-            height="auto",
             justify="between",
-            # padding="2em 5em",
-            _hover={"background": "cyan"},
+            align="start",
         )
 
     def week_days() -> rx.Component:
@@ -73,14 +71,12 @@ def calendar_view() -> rx.Component:
             ),
             width="100%",
             justify="between",
-            _hover={"background": "cyan"},
+            align="start",
         )
 
     def show_day(var_date: VarDate) -> rx.Component:
         return rx.box(
             rx.text(f"{var_date.day}"),
-            # justify="start",
-            # align="start",
             width="100%",
             height="100%",
             padding="0.5em",
@@ -93,12 +89,10 @@ def calendar_view() -> rx.Component:
         return rx.grid(
             rx.foreach(CalendarState.dates, show_day),
             columns="7",
+            flow="row-dense",
             width="100%",
             height="100%",
             spacing="0",
-            align="end",
-            justify="between",
-            _hover={"background": "cyan"},
         )
 
     def render() -> rx.Component:
@@ -110,9 +104,11 @@ def calendar_view() -> rx.Component:
             direction="column",
             width="100%",
             height="100%",
+            max_height="100%",
             padding="1em",
             align="start",
-            justify="between",
+            justify="start",
+            sizing="border-box",
         )
 
     return render()
