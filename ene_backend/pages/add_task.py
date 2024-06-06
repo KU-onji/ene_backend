@@ -2,10 +2,10 @@
 
 import reflex as rx
 
-from ene_backend.templates import template
+# from ene_backend.templates import template
 
 
-@template(route="/add_task", title="Add Task")
+# @template(route="/add_task", title="Add Task")
 def add_task() -> rx.Component:
     """Add task page.
 
