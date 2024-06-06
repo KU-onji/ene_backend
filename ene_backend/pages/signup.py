@@ -6,7 +6,7 @@ from ene_backend.state.auth import AuthState
 from ene_backend.templates import template
 
 
-@template(route="/signup", title="Signup")
+@template(route="/signup", title="サインアップ")
 def signup_single_thirdparty() -> rx.Component:
     return rx.center(
         rx.card(

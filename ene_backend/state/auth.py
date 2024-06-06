@@ -28,4 +28,4 @@ class AuthState(ThemeState):
                 self.user = user
                 return rx.redirect("/home")
             else:
-                return rx.window_alert("Invalid address or password")
+                return rx.window_alert("ユーザー名またはパスワードが正しくありません。")

@@ -6,7 +6,7 @@ from ene_backend.state.auth import AuthState
 from ene_backend.templates import template
 
 
-@template(route="/", title="Login")
+@template(route="/", title="ログイン")
 def login_single_thirdparty() -> rx.Component:
     return rx.center(
         rx.card(
@@ -115,9 +115,9 @@ def login_single_thirdparty() -> rx.Component:
                 width="100%",
             ),
             size="4",
+            width="80%",
             max_width="28em",
-            width="100%",
         ),
         opacity="0.8",
-        width="100%",
+        width="80%",
     )
