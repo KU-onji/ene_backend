@@ -2,6 +2,7 @@ from typing import Literal
 
 import reflex as rx
 
+from ene_backend import styles
 from ene_backend.components import (
     content_tab,
     icon_dialog,
@@ -31,10 +32,50 @@ def content_field(
         ),
         border_radius="0.5em",
         padding="1em",
-        background=rx.color_mode_cond("white", "black"),
+        background=rx.color_mode_cond("white", "#333333"),
         width=width,
         height=height,
         # _hover={"background": "tomato"},  # for debugging
+    )
+
+
+def button_boxes() -> rx.Component:
+    """The button to add a task.
+
+    Returns:
+        The button to add a task.
+    """
+    return rx.flex(
+        rx.button(
+            rx.icon("message_circle"),
+            "ほめて！",
+            color_scheme="mint",
+            **styles.button_box_style,
+        ),
+        rx.button(
+            rx.icon("lightbulb"),
+            "それAIでどうにかならない？",
+            color_scheme="jade",
+            **styles.button_box_style,
+        ),
+        rx.button(
+            rx.icon("trash-2"),
+            "履歴をクリア",
+            color_scheme="tomato",
+            **styles.button_box_style,
+        ),
+        rx.button(
+            rx.icon("plus"),
+            "タスクを追加",
+            color_scheme="iris",
+            **styles.button_box_style,
+        ),
+        direction="column",
+        width="100%",
+        height="20%",
+        justify="between",
+        align="stretch",
+        margin_top="1em",
     )
 
 
@@ -57,47 +98,30 @@ def left_box() -> rx.Component:
             width="100%",
             height="100%",
         ),
-        background=rx.color_mode_cond("lightgray", "darkgray"),
         padding_y="1em",
         padding_left="1em",
         width="55%",
+        height="100%",
     )
 
 
 def right_box() -> rx.Component:
-    return rx.box(
+    return rx.flex(
         content_field(
             "100%",
-            "90%",
+            "80%",
             "start",
             "start",
             icon_dialog.icon_dialog(("Hello", "Hi")),
             icon_dialog.icon_dialog(("How are you?", "I'm fine.")),
         ),
-        background=rx.color_mode_cond("lightgray", "darkgray"),
-        padding="1em",
+        button_boxes(),
+        direction="column",
         width="45%",
-    )
-
-
-def task_add_button() -> rx.Component:
-    """The button to add a task.
-
-    Returns:
-        The button to add a task.
-    """
-    return rx.button(
-        rx.icon("plus", size=100),
-        on_click=rx.redirect("/home"),
-        color_scheme="iris",
-        variant="solid",
-        border_radius="50%",
-        draggable=True,
-        width="7em",
-        height="7em",
-        position="fixed",
-        left="2em",
-        bottom="2em",
+        height="100%",
+        justify="center",
+        align="center",
+        padding="1em",
     )
 
 
@@ -113,7 +137,6 @@ def home() -> rx.Component:
         rx.hstack(
             left_box(),
             right_box(),
-            task_add_button(),
             spacing="0",
             width="100%",
             height="100%",
@@ -121,4 +144,5 @@ def home() -> rx.Component:
         ),
         width="100vw",
         height="calc(100vh - 7em)",
+        background=rx.color_mode_cond("#f0f0f0", "#666666"),
     )

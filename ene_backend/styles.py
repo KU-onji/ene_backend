@@ -53,8 +53,16 @@ header_style = {
 message_style = {
     "display": "inline-block",
     "padding_x": "1em",
-    "color": "black",
     "border_radius": border_radius,
 }
 
 graph_style = {"background_color": rx.color("cyan", 4), **message_style}
+
+button_box_style = {
+    "variant": "soft",
+    "font_size": "1.25em",
+    "width": "100%",
+    "height": "20%",
+    "padding_y": "1em",
+    "border_radius": border_radius,
+}
