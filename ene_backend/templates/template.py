@@ -121,14 +121,19 @@ def template(
                 rx.box(
                     rx.vstack(
                         page_content(),
+                        width="100%",
+                        height="100%",
                         **styles.template_content_style,
                     ),
+                    width="100%",
+                    height="calc(100vh - 7em)",
                     **styles.template_page_style,
                 ),
                 menu_button(),
-                align="start",
                 background=f"radial-gradient(circle at top right, {rx.color('accent', 2)}, {rx.color('mauve', 1)});",
                 position="relative",
+                width="100%",
+                height="100vh",
             )
 
         @rx.page(

@@ -142,7 +142,7 @@ def home() -> rx.Component:
             height="100%",
             align="stretch",
         ),
-        width="100vw",
-        height="calc(100vh - 7em)",
+        width="100%",
+        height="100%",
         background=rx.color_mode_cond("#f0f0f0", "#666666"),
     )

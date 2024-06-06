@@ -12,11 +12,18 @@ hover_accent_bg = {"_hover": {"background_color": accent_color}}
 content_width_vw = "90vw"
 sidebar_width = "20em"
 
-template_page_style = {"padding_top": "7em", "flex": "1"}
+template_page_style = {
+    "padding_top": "7em",
+    "flex": "1",
+}
 
 template_content_style = {
     "border_radius": border_radius,
     "min_height": "90vh",
+    # "overflow": "auto",
+    "align": "center",
+    "justify": "center",
+    "position": "relative",
 }
 
 link_style = {

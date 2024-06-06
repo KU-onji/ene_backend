@@ -26,6 +26,6 @@ class AuthState(ThemeState):
             user = session.exec(select(User).where(User.address == self.address)).first()
             if user and user.password == self.password:
                 self.user = user
-                return rx.redirect("/home")
+                return rx.redirect("/ene-home")
             else:
-                return rx.window_alert("Invalid address or password")
+                return rx.window_alert("ユーザー名またはパスワードが正しくありません。")

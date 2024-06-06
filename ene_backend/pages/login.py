@@ -115,9 +115,9 @@ def login_single_thirdparty() -> rx.Component:
                 width="100%",
             ),
             size="4",
+            width="80%",
             max_width="28em",
-            width="100%",
         ),
         opacity="0.8",
-        width="100%",
+        width="80%",
     )
