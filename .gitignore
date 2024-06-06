@@ -1,13 +1,13 @@
-!.gitignore
-!.pre-commit-config.yaml
-!/assets/**
-!/src/*.py
-!README.md
-**/__pycache__/**
-*.db
-*.py[cod]
-.python-version
-.web
+# files to ignore
 /.venv/
+**/__pycache__/**
+.python-version
 /.web/
 reflex.db
+
+# except for these
+!.gitignore
+!/src/*.py
+!README.md
+!.pre-commit-config.yaml
+!/assets/**
