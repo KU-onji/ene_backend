@@ -42,7 +42,7 @@ class CalendarState(rx.State):
 
     def update_calendar(self) -> None:
         self.dates = [
-            VarDate(year=base_date.year, month=base_date.month, day=base_date.day)
+            VarDate(year=base_date.year, month=base_date.month, day=base_date.day, weekday=base_date.weekday())
             for base_date in calendar.Calendar().itermonthdates(self.current_year, self.current_month)
         ]
         self.month = f"{self.current_month}月"
@@ -76,12 +76,12 @@ def calendar_view() -> rx.Component:
 
     def show_day(var_date: VarDate) -> rx.Component:
         return rx.box(
-            rx.text(f"{var_date.day}"),
+            rx.text(f"{var_date.day}", color=rx.color_mode_cond("black", "white")),
             width="100%",
             height="100%",
             padding="0.5em",
-            background="white",
-            border="1px solid black",
+            background=rx.color_mode_cond("white", "#333333"),
+            border=rx.color_mode_cond("1px solid black", "1px solid white"),
             _hover={"transform": "scale(1.1)"},
         )
 
