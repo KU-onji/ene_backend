@@ -4,6 +4,8 @@
 .python-version
 /.web/
 reflex.db
+alembic.ini
+/alembic/
 
 # except for these
 !.gitignore
