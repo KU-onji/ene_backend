@@ -1,5 +1,6 @@
 !.gitignore
 !.pre-commit-config.yaml
+!/assets/**
 !/src/*.py
 !README.md
 **/__pycache__/**
@@ -9,5 +10,4 @@
 .web
 /.venv/
 /.web/
-/assets/
-__pycache__/
+reflex.db

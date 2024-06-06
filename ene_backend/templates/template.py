@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import Callable, Optional
 
 import reflex as rx
 
 from ene_backend import styles
-from ene_backend.components.sidebar import sidebar
+from ene_backend.components.header import navi_bar
+from ene_backend.db_model import User
 
 # Meta tags for the app.
 default_meta = [
@@ -69,6 +70,15 @@ class ThemeState(rx.State):
     accent_color: str = "crimson"
 
     gray_color: str = "gray"
+    user: Optional[User] = None
+
+    def check_login(self):
+        if not self.logged_in:
+            return rx.redirect("/")
+
+    @rx.var
+    def logged_in(self):
+        return self.user is not None
 
 
 def template(
@@ -106,21 +116,24 @@ def template(
         all_meta = [*default_meta, *(meta or [])]
 
         def templated_page():
-            return rx.hstack(
-                sidebar(),
+            return rx.vstack(
+                navi_bar(),
                 rx.box(
                     rx.vstack(
                         page_content(),
-                        rx.spacer(),
-                        rx.logo(),
+                        width="100%",
+                        height="100%",
                         **styles.template_content_style,
                     ),
+                    width="100%",
+                    height="calc(100vh - 7em)",
                     **styles.template_page_style,
                 ),
                 menu_button(),
-                align="start",
                 background=f"radial-gradient(circle at top right, {rx.color('accent', 2)}, {rx.color('mauve', 1)});",
                 position="relative",
+                width="100%",
+                height="100vh",
             )
 
         @rx.page(
