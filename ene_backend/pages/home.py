@@ -125,7 +125,7 @@ def right_box() -> rx.Component:
     )
 
 
-@template(route="/home", title="ene: Home")
+@template(route="/ene-home", title="ene: Home")
 def home() -> rx.Component:
     """The home page.
 
