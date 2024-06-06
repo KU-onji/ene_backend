@@ -7,7 +7,7 @@ from typing import Callable, Optional
 import reflex as rx
 
 from ene_backend import styles
-from ene_backend.components.sidebar import sidebar
+from ene_backend.components.header import navi_bar
 from ene_backend.db_model import User
 
 # Meta tags for the app.
@@ -116,13 +116,11 @@ def template(
         all_meta = [*default_meta, *(meta or [])]
 
         def templated_page():
-            return rx.hstack(
-                sidebar(),
+            return rx.vstack(
+                navi_bar(),
                 rx.box(
                     rx.vstack(
                         page_content(),
-                        rx.spacer(),
-                        rx.logo(),
                         **styles.template_content_style,
                     ),
                     **styles.template_page_style,
