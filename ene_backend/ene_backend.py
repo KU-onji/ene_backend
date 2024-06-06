@@ -3,9 +3,8 @@
 # Import all the pages.
 import reflex as rx
 
-from ene_backend.pages import add_task, home, login, settings, signup
+from ene_backend.pages import home, login, settings, signup
 
-add_task
 settings
 home.home
 login

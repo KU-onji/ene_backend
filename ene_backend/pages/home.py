@@ -64,11 +64,43 @@ def button_boxes() -> rx.Component:
             color_scheme="tomato",
             **styles.button_box_style,
         ),
-        rx.button(
-            rx.icon("plus"),
-            "タスクを追加",
-            color_scheme="iris",
-            **styles.button_box_style,
+        rx.dialog.root(
+            rx.dialog.trigger(
+                rx.button(
+                    rx.icon("plus"),
+                    "タスクを追加",
+                    color_scheme="iris",
+                    **styles.button_box_style,
+                ),
+            ),
+            rx.dialog.content(
+                rx.dialog.title("タスクを追加"),
+                rx.flex(
+                    rx.text("名前:"),
+                    rx.input(),
+                    rx.text("締切日時:"),
+                    rx.input(type="datetime-local"),
+                    rx.text("詳細:"),
+                    rx.text_area(),
+                    direction="column",
+                    spacing="3",
+                ),
+                rx.flex(
+                    rx.dialog.close(
+                        rx.button(
+                            "キャンセル",
+                            color_scheme="gray",
+                            variant="soft",
+                        ),
+                    ),
+                    rx.dialog.close(
+                        rx.button("追加"),
+                    ),
+                    spacing="3",
+                    margin_top="16px",
+                    justify="end",
+                ),
+            ),
         ),
         direction="column",
         width="100%",
