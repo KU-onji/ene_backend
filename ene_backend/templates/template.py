@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import Callable, Optional
 
 import reflex as rx
 
 from ene_backend import styles
 from ene_backend.components.header import navi_bar
+from ene_backend.db_model import User
 
 # Meta tags for the app.
 default_meta = [
@@ -69,6 +70,15 @@ class ThemeState(rx.State):
     accent_color: str = "crimson"
 
     gray_color: str = "gray"
+    user: Optional[User] = None
+
+    def check_login(self):
+        if not self.logged_in:
+            return rx.redirect("/")
+
+    @rx.var
+    def logged_in(self):
+        return self.user is not None
 
 
 def template(
