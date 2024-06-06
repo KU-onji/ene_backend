@@ -8,7 +8,7 @@ from ene_backend.components import (
     icon_dialog,
     my_calendar,
     suggestion,
-    task_view,
+    task_table,
 )
 from ene_backend.templates import template
 
@@ -94,7 +94,10 @@ def button_boxes() -> rx.Component:
                         ),
                     ),
                     rx.dialog.close(
-                        rx.button("追加"),
+                        rx.button(
+                            "追加",
+                            on_click=task_table.TaskTableState.add_task("homework", "High", "study", "2024-06-10"),
+                        ),
                     ),
                     spacing="3",
                     margin_top="16px",
@@ -122,7 +125,7 @@ def left_box() -> rx.Component:
                 "between",
                 content_tab.content_tab(
                     (my_calendar.calendar_view(), "カレンダー"),
-                    (task_view.task_view(), "タスク一覧"),
+                    (task_table.task_table(), "タスク一覧"),
                 ),
             ),
             justify="center",
