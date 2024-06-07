@@ -8,6 +8,7 @@ class AuthState(ThemeState):
     address: str
     password: str
     confirm_password: str
+    name: str
 
     def signup(self):
         with rx.session() as session:
@@ -29,3 +30,20 @@ class AuthState(ThemeState):
                 return rx.redirect("/home")
             else:
                 return rx.window_alert("ユーザー名またはパスワードが正しくありません。")
+    
+    # update user profile
+    def update_profile(self,profile: dict):
+        user = User(address=self.address, password=self.password)
+        
+        with rx.session() as session:
+            if profile["address"]!="":
+                self.address = profile["address"]
+                user.address = self.address
+            if profile["password"]!="":
+                self.password = profile["password"]
+                user.password = self.password
+            if profile["name"]!="":
+                self.name = profile["name"]
+                user.name = self.name
+            session.expire_on_commit = False
+            session.commit()

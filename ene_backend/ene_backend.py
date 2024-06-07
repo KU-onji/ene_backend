@@ -3,12 +3,13 @@
 # Import all the pages.
 import reflex as rx
 
-from ene_backend.pages import home, login, settings, signup
+from ene_backend.pages import home, login, settings, signup, user_profile
 
 settings
 home.home
 login
 signup
+user_profile
 
 
 class State(rx.State):
