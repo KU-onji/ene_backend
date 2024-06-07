@@ -14,6 +14,7 @@ class VarDate(rx.Base):
 class CalendarState(rx.State):
     current_year: int = datetime.now().year
     current_month: int = datetime.now().month
+    current_day: int = datetime.now().day
     week_days: list[str] = ["月", "火", "水", "木", "金", "土", "日"]
     dates: list[VarDate] = [
         VarDate(
@@ -76,7 +77,31 @@ def calendar_view() -> rx.Component:
 
     def show_day(var_date: VarDate) -> rx.Component:
         return rx.box(
-            rx.text(f"{var_date.day}", color=rx.color_mode_cond("black", "white")),
+            rx.text(
+                f"{var_date.day}",
+                color=rx.color_mode_cond(
+                    rx.cond(
+                        var_date.day == CalendarState.current_day,
+                        "darkorange",
+                        rx.cond(
+                            ~(var_date.month == CalendarState.current_month),
+                            "gray",
+                            rx.cond(var_date.weekday == 5, "blue", rx.cond(var_date.weekday == 6, "red", "#333333")),
+                        ),
+                    ),
+                    rx.cond(
+                        var_date.day == CalendarState.current_day,
+                        "yellow",
+                        rx.cond(
+                            ~(var_date.month == CalendarState.current_month),
+                            "gray",
+                            rx.cond(
+                                var_date.weekday == 5, "#AAAAFF", rx.cond(var_date.weekday == 6, "#FFAAAA", "white")
+                            ),
+                        ),
+                    ),
+                ),
+            ),
             width="100%",
             height="100%",
             padding="0.5em",

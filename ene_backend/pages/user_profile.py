@@ -12,7 +12,7 @@ def profile() -> rx.Component:
     return rx.container(
         rx.color_mode.button(position="top-right"),
         rx.vstack(
-            rx.heading("Your Profile", size="9"),
+            rx.heading("プロフィール", size="9"),
             rx.form(
                 rx.vstack(
                     rx.hstack(
@@ -31,7 +31,7 @@ def profile() -> rx.Component:
                     ),
                     rx.hstack(
                         rx.text(
-                            "Name: ",
+                            "ニックネーム: ",
                             size="5",
                         ),
                         rx.text(
@@ -40,11 +40,11 @@ def profile() -> rx.Component:
                         ),
                     ),
                     rx.input(
-                        placeholder="あたらしいおなまえ",
+                        placeholder="新しいニックネーム",
                         name="name",
                     ),
                     rx.text(
-                        "Password",
+                        "パスワードを入力",
                         size="5",
                     ),
                     rx.input(
