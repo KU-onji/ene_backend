@@ -1,5 +1,3 @@
-import re
-
 import reflex as rx
 from sqlmodel import or_, select
 
@@ -8,17 +6,35 @@ from ..db_task import Task
 
 class TaskTableState(rx.State):
     tasks: list[Task] = []
-    input_dict: dict = {}
+    current_task: Task = Task()
 
     search_value = ""
 
-    def add_task_to_db(self, input_dict: dict):
-        self.input_dict = input_dict
-        name, priority, category, deadline, memo = input_dict.values()
-        deadline = re.findall(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}", deadline)[0]
-        deadline = deadline.replace("-", "/").replace("T", " ")
+    def get_task(self, task: Task):
+        self.current_task = task
+
+    def update_task(self, input_dict: dict):
+        self.current_task.update(input_dict)
         with rx.session() as session:
-            session.add(Task(name=name, priority=priority, category=category, deadline=deadline, memo=memo))
+            task = session.exec(select(Task).where(Task.id == self.current_task["id"])).first()
+            for field in Task.get_fields():
+                if field != "id":
+                    setattr(task, field, self.current_task[field])
+            session.add(task)
+            session.commit()
+        self.load_entries()
+
+    def delete_task(self):
+        with rx.session() as session:
+            task = session.exec(select(Task).where(Task.id == self.current_task["id"])).first()
+            session.delete(task)
+            session.commit()
+        self.load_entries()
+
+    def add_task_to_db(self, input_dict: dict):
+        self.current_task = input_dict
+        with rx.session() as session:
+            session.add(Task(**self.current_task))
             session.commit()
         self.load_entries()
 
