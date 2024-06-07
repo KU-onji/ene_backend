@@ -1,6 +1,5 @@
 import calendar
 from datetime import datetime
-from typing import Any
 
 import reflex as rx
 
@@ -85,29 +84,14 @@ def calendar_view() -> rx.Component:
                 rx.cond(
                     ~(var_date.month == CalendarState.current_month),
                     "darkgray",
-                    rx.cond(
-                        var_date.weekday == 5,
-                        "#AAAAFF",
-                        rx.cond(
-                            var_date.weekday == 6,
-                            "#FFAAAA",
-                            "white"
-                        )
-                    )
+                    rx.cond(var_date.weekday == 5, "#AAAAFF", rx.cond(var_date.weekday == 6, "#FFAAAA", "white")),
                 ),
                 rx.cond(
                     ~(var_date.month == CalendarState.current_month),
                     "gray",
-                    rx.cond(
-                        var_date.weekday == 5,
-                        "#151555",
-                        rx.cond(
-                            var_date.weekday == 6,
-                            "#551515",
-                            "#333333"
-                        )
-                    )
-                ),),
+                    rx.cond(var_date.weekday == 5, "#151555", rx.cond(var_date.weekday == 6, "#551515", "#333333")),
+                ),
+            ),
             border=rx.color_mode_cond("1px solid black", "1px solid white"),
             _hover={"transform": "scale(1.1)"},
         )
