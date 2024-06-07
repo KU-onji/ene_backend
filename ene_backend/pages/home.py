@@ -8,9 +8,11 @@ from ene_backend.components import (
     icon_dialog,
     my_calendar,
     suggestion,
-    task_view,
+    task_table,
 )
 from ene_backend.templates import template
+
+from ..state.task_state import TaskTableState
 
 
 def content_field(
@@ -74,31 +76,38 @@ def button_boxes() -> rx.Component:
                 ),
             ),
             rx.dialog.content(
-                rx.dialog.title("タスクを追加"),
-                rx.flex(
-                    rx.text("名前:"),
-                    rx.input(),
-                    rx.text("締切日時:"),
-                    rx.input(type="datetime-local"),
-                    rx.text("詳細:"),
-                    rx.text_area(),
-                    direction="column",
-                    spacing="3",
-                ),
-                rx.flex(
-                    rx.dialog.close(
-                        rx.button(
-                            "キャンセル",
-                            color_scheme="gray",
-                            variant="soft",
+                rx.form(
+                    rx.dialog.title("タスクを追加"),
+                    rx.flex(
+                        rx.text("名前:"),
+                        rx.input(name="name", required=True),
+                        rx.text("優先度"),
+                        rx.select(["低", "中", "高"], default_value="高", name="priority"),
+                        rx.text("カテゴリ"),
+                        rx.input(name="category"),
+                        rx.text("締切日時:"),
+                        rx.input(name="deadline", type="datetime-local", required=True),
+                        rx.text("詳細:"),
+                        rx.text_area(name="memo"),
+                        direction="column",
+                        spacing="3",
+                    ),
+                    rx.flex(
+                        rx.dialog.close(
+                            rx.button(
+                                "キャンセル",
+                                color_scheme="gray",
+                                variant="soft",
+                            ),
                         ),
+                        rx.dialog.close(
+                            rx.button("追加", type="submit"),
+                        ),
+                        spacing="3",
+                        margin_top="16px",
+                        justify="end",
                     ),
-                    rx.dialog.close(
-                        rx.button("追加"),
-                    ),
-                    spacing="3",
-                    margin_top="16px",
-                    justify="end",
+                    on_submit=TaskTableState.add_task_to_db,
                 ),
             ),
         ),
@@ -122,7 +131,7 @@ def left_box() -> rx.Component:
                 "between",
                 content_tab.content_tab(
                     (my_calendar.calendar_view(), "カレンダー"),
-                    (task_view.task_view(), "タスク一覧"),
+                    (task_table.task_table(), "タスク一覧"),
                 ),
             ),
             justify="center",
