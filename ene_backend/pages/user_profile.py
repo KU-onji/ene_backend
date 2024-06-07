@@ -43,11 +43,11 @@ def profile() -> rx.Component:
                         name="name",
                     ),
                     rx.text(
-                        "パスワード",
+                        "パスワードを入力",
                         size="5",
                     ),
                     rx.input(
-                        placeholder="新しいパスワード",
+                        placeholder="パスワード",
                         name="password",
                     ),
                     rx.button("Change profile", width="10em", type="submit"),
