@@ -11,7 +11,7 @@ def profile() -> rx.Component:
     return rx.container(
         rx.color_mode.button(position="top-right"),
         rx.vstack(
-            rx.heading("Your Profile", size="9"),
+            rx.heading("プロフィール", size="9"),
             rx.form(
                 rx.vstack(
                     rx.hstack(
@@ -30,7 +30,7 @@ def profile() -> rx.Component:
                     ),
                     rx.hstack(
                         rx.text(
-                            "Name: ",
+                            "ニックネーム: ",
                             size="5",
                         ),
                         rx.text(
@@ -39,24 +39,18 @@ def profile() -> rx.Component:
                         ),
                     ),
                     rx.input(
-                        placeholder="あたらしいおなまえ",
+                        placeholder="新しいニックネーム",
                         name="name",
                     ),
                     rx.text(
-                        "Password",
+                        "パスワード",
                         size="5",
                     ),
                     rx.input(
-                        placeholder="パスワード",
-                        on_blur=AuthState.set_password,
+                        placeholder="新しいパスワード",
                         name="password",
-                        type="password"
                     ),
-                    rx.button(
-                        "Change profile", 
-                        width="10em",
-                        type="submit"
-                    ),
+                    rx.button("Change profile", width="10em", type="submit"),
                 ),
                 on_submit=AuthState.update_profile,
                 reset_on_submit=True,
@@ -64,5 +58,5 @@ def profile() -> rx.Component:
             spacing="5",
             justify="center",
             min_height="85vh",
-        )
+        ),
     )
