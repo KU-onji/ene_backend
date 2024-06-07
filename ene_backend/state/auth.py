@@ -13,9 +13,9 @@ class AuthState(ThemeState):
     def signup(self):
         with rx.session() as session:
             if self.password != self.confirm_password:
-                return rx.window_alert("Passwords do not match")
+                return rx.window_alert("確認用のパスワードが一致しません")
             if session.exec(select(User).where(User.address == self.address)).first():
-                return rx.window_alert("Address already exists")
+                return rx.window_alert("すでに登録されているメールアドレスです")
             self.user = User(address=self.address, password=self.password)
             session.add(self.user)
             session.expire_on_commit = False

@@ -4,9 +4,10 @@ import reflex as rx
 
 from ene_backend.state.auth import AuthState
 from ene_backend.templates import template
+from ene_backend.templates.template import ThemeState
 
 
-@template(route="/user_profile", title="プロフィール")
+@template(route="/user_profile", title="プロフィール", on_load=ThemeState.check_login())
 def profile() -> rx.Component:
     return rx.container(
         rx.color_mode.button(position="top-right"),
@@ -47,8 +48,7 @@ def profile() -> rx.Component:
                         size="5",
                     ),
                     rx.input(
-                        placeholder="パスワード",
-                        name="password",
+                        placeholder="パスワード", on_blur=AuthState.set_password, name="password", type="password"
                     ),
                     rx.button("Change profile", width="10em", type="submit"),
                 ),
