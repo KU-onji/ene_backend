@@ -6,6 +6,7 @@ python = "^3.12"
 openai = "^1.30.5"
 reflex = "^0.5.2"
 pre-commit = "^3.7.1"
+tenacity = "^8.3.0"
 
 [build-system]
 requires = ["poetry-core"]
