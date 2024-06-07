@@ -32,10 +32,9 @@ class AuthState(ThemeState):
                 return rx.window_alert("ユーザー名またはパスワードが正しくありません。")
     
     # update user profile
-    def update_profile(self,profile: dict):
-        user = User(address=self.address, password=self.password)
-        
+    def update_profile(self,profile: dict):        
         with rx.session() as session:
+            user = session.exec(select(User).where(User.address == self.address)).first()
             if profile["address"]!="":
                 self.address = profile["address"]
                 user.address = self.address
