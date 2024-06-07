@@ -1,19 +1,7 @@
-import re
-
 import reflex as rx
 
 from ..db_task import Task
 from ..state.task_state import TaskTableState
-
-
-def convert_date(date):
-    print(str(date))
-    convert = re.findall(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}", str(date))
-    print(convert)
-    if convert:
-        return rx.text(convert[0].replace("-", "/").replace("T", " "))
-    else:
-        return date
 
 
 def show_task(task: Task):
@@ -22,7 +10,7 @@ def show_task(task: Task):
         rx.table.cell(task.name),
         rx.table.cell(task.priority),
         rx.table.cell(task.category),
-        rx.table.cell(convert_date(task.deadline)),
+        rx.table.cell(task.deadline_convert),
         rx.table.cell(
             rx.dialog.root(
                 rx.dialog.trigger(
@@ -60,15 +48,19 @@ def show_task(task: Task):
                             ),
                             rx.dialog.close(
                                 rx.button(
-                                    "更新",
-                                    color_scheme="green",
+                                    "削除",
+                                    color_scheme="red",
                                     variant="soft",
-                                    type="submit",
+                                    type="reset",
+                                    on_click=TaskTableState.delete_task,
                                 ),
                             ),
                             rx.dialog.close(
                                 rx.button(
-                                    "削除", color_scheme="red", variant="soft", on_click=TaskTableState.delete_task
+                                    "更新",
+                                    color_scheme="green",
+                                    variant="soft",
+                                    type="submit",
                                 ),
                             ),
                             spacing="3",
@@ -76,6 +68,7 @@ def show_task(task: Task):
                             justify="end",
                         ),
                         on_submit=TaskTableState.update_task,
+                        reset_on_submit=True,
                     ),
                 ),
             )

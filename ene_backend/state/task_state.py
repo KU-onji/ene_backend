@@ -14,6 +14,10 @@ class TaskTableState(rx.State):
         self.current_task = task
 
     def update_task(self, input_dict: dict):
+        print("call")
+        deadline = input_dict["deadline"]
+        deadline = deadline.replace("-", "/").replace("T", " ")
+        input_dict["deadline_convert"] = deadline
         self.current_task.update(input_dict)
         with rx.session() as session:
             task = session.exec(select(Task).where(Task.id == self.current_task["id"])).first()
@@ -32,6 +36,9 @@ class TaskTableState(rx.State):
         self.load_entries()
 
     def add_task_to_db(self, input_dict: dict):
+        deadline = input_dict["deadline"]
+        deadline = deadline.replace("-", "/").replace("T", " ")
+        input_dict["deadline_convert"] = deadline
         self.current_task = input_dict
         with rx.session() as session:
             session.add(Task(**self.current_task))
