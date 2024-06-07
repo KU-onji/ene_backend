@@ -10,7 +10,6 @@ class TaskTableState(rx.State):
     tasks: list[Task] = []
     input_dict: dict = {}
 
-    sort_value = ""
     search_value = ""
 
     def add_task_to_db(self, input_dict: dict):

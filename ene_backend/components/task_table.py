@@ -15,7 +15,7 @@ def show_task(task: Task):
     )
 
 
-def task_table():
+def task_table() -> rx.Component:
     return rx.vstack(
         rx.input(
             placeholder="Search here...",
