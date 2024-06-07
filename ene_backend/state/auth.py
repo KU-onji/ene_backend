@@ -13,9 +13,9 @@ class AuthState(ThemeState):
     def signup(self):
         with rx.session() as session:
             if self.password != self.confirm_password:
-                return rx.window_alert("Passwords do not match")
+                return rx.window_alert("確認用のパスワードが一致しません")
             if session.exec(select(User).where(User.address == self.address)).first():
-                return rx.window_alert("Address already exists")
+                return rx.window_alert("すでに登録されているメールアドレスです")
             self.user = User(address=self.address, password=self.password)
             session.add(self.user)
             session.expire_on_commit = False
@@ -30,18 +30,18 @@ class AuthState(ThemeState):
                 return rx.redirect("/home")
             else:
                 return rx.window_alert("ユーザー名またはパスワードが正しくありません。")
-    
+
     # update user profile
-    def update_profile(self,profile: dict):        
+    def update_profile(self, profile: dict):
         with rx.session() as session:
             user = session.exec(select(User).where(User.address == self.address)).first()
-            if profile["address"]!="":
+            if profile["address"] != "":
                 self.address = profile["address"]
                 user.address = self.address
-            if profile["password"]!="":
+            if profile["password"] != "":
                 self.password = profile["password"]
                 user.password = self.password
-            if profile["name"]!="":
+            if profile["name"] != "":
                 self.name = profile["name"]
                 user.name = self.name
             session.expire_on_commit = False
