@@ -81,7 +81,7 @@ def create_partition_prompt(taskname: str):
         "次のタスクを分解してください："
     )
 
-    return {"user_prompt": taskname, "system_prompt": system_prompt, "model": "GPT-3.5", "temparature": 0}
+    return {"user_prompt": taskname, "system_prompt": system_prompt, "model": "gpt-3.5-turbo", "temparature": 0}
 
 
 @retry(stop=stop_after_attempt(2), wait=wait_fixed(1))
