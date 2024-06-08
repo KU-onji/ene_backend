@@ -6,4 +6,5 @@ class Task(rx.Model, table=True):
     priority: str
     category: str
     deadline: str
+    deadline_convert: str
     memo: str
