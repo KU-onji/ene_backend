@@ -27,7 +27,7 @@ class AuthState(ThemeState):
     address: str
     password: str
     confirm_password: str
-    name: str | None
+    name: str
     user_id: str
 
     def signup(self):
