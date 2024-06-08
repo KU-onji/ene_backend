@@ -112,10 +112,18 @@ def show_task(task: Task):
 
 def task_table() -> rx.Component:
     return rx.vstack(
-        rx.input(
-            default_value=TaskTableState.search_value,
-            placeholder="Search here...",
-            on_change=lambda value: TaskTableState.filter_values(value),
+        rx.flex(
+            rx.input(
+                rx.input.slot(
+                    rx.icon(tag="search"),
+                ),
+                default_value=TaskTableState.search_value,
+                placeholder="Search here...",
+                on_change=lambda value: TaskTableState.filter_values(value),
+            ),
+            rx.icon(tag="arrow-down-narrow-wide"),
+            rx.select(["日付", "優先度"], default_value="日付", on_change=TaskTableState.sort_values),
+            spacing="2",
         ),
         rx.scroll_area(
             rx.table.root(

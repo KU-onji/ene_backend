@@ -1,5 +1,5 @@
 import reflex as rx
-from sqlmodel import or_, select
+from sqlmodel import case, or_, select
 
 from ..db_model import CompleteTask, Task
 from .auth import AuthState
@@ -36,6 +36,7 @@ class TaskTableState(AuthState):
     current_task: Task = Task()
     memo: str = ""
     search_value: str = ""
+    sort_value: str = "日付"
 
     def get_task(self, task: Task):
         self.current_task = task
@@ -111,6 +112,10 @@ class TaskTableState(AuthState):
         self.search_value = search_value
         self.load_entries()
 
+    def sort_values(self, sort_value: str):
+        self.sort_value = sort_value
+        self.load_entries()
+
     def load_entries(self) -> list[Task]:
         """Get all users from the database."""
         with rx.session() as session:
@@ -124,7 +129,12 @@ class TaskTableState(AuthState):
                     )
                 )
 
-            query = query.order_by(Task.deadline)
+            if self.sort_value:
+                if self.sort_value == "優先度":
+                    order = case({"高": 1, "中": 2, "低": 3}, value=Task.priority)
+                    query = query.order_by(order).order_by(Task.deadline)
+                else:
+                    query = query.order_by(Task.deadline)
 
             self.tasks = session.exec(query).all()
 
