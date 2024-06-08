@@ -61,14 +61,14 @@ def create_compliment_prompt(username: str, taskname: str, duration: int, diffic
     return {"system_prompt": system_prompt, "user_prompt": user_prompt, "model": "gpt-4o", "temperature": 1}
 
 
-def create_request(system_prompt: str, user_prompt: str, model: str) -> dict:
+def create_request(system_prompt: str, user_prompt: str, model: str, temperature: int) -> dict:
     return {
         "model": model,
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ],
-        "temperature": 1,
+        "temperature": temperature,
     }
 
 
@@ -81,7 +81,7 @@ def create_partition_prompt(taskname: str):
         "次のタスクを分解してください："
     )
 
-    return {"user_prompt": taskname, "system_prompt": system_prompt, "model": "gpt-3.5-turbo", "temparature": 0}
+    return {"user_prompt": taskname, "system_prompt": system_prompt, "model": "gpt-3.5-turbo", "temperature": 0}
 
 
 @retry(stop=stop_after_attempt(2), wait=wait_fixed(1))
