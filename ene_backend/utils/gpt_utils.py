@@ -85,9 +85,9 @@ def create_partition_prompt(taskname: str):
 
 
 @retry(stop=stop_after_attempt(2), wait=wait_fixed(1))
-async def call_gpt_async(client: AsyncOpenAI, prompt) -> tuple[str, int]:
+async def call_gpt_async(client: AsyncOpenAI, prompt: dict) -> tuple[str, int]:
     try:
-        res = await client.chat.completions.create(**create_request(prompt))
+        res = await client.chat.completions.create(**create_request(**prompt))
         return res.choices[0].message.content
     except RetryError:
         return "ごめん、今忙しいからちょっと待ってね。"
