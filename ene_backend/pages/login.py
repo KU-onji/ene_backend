@@ -2,11 +2,12 @@
 
 import reflex as rx
 
+from ene_backend.components.header import CurrentTimeState
 from ene_backend.state.auth import AuthState
 from ene_backend.templates import template
 
 
-@template(route="/", title="ログイン")
+@template(route="/", title="ログイン", on_load=CurrentTimeState.update_time())
 def login_single_thirdparty() -> rx.Component:
     return rx.center(
         rx.card(
