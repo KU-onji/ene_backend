@@ -23,7 +23,7 @@ def create_request(prompt):
     }
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+@retry(stop=stop_after_attempt(2), wait=wait_fixed(1))
 async def call_gpt_async(client: AsyncOpenAI, prompt: str) -> tuple[str, int]:
     try:
         res = await client.chat.completions.create(**create_request(prompt))
