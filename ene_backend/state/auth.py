@@ -28,9 +28,7 @@ class AuthState(ThemeState):
     password: str
     confirm_password: str
     name: str | None
-
-    def get_address(self):
-        return self.address
+    user_id: str
 
     def signup(self):
         with rx.session() as session:
@@ -45,12 +43,11 @@ class AuthState(ThemeState):
             return rx.redirect("/")
 
     def login(self):
-        print(type(User.address))
-        print(type(self.address))
         with rx.session() as session:
             user = session.exec(select(User).where(User.address == self.address)).first()
             if user and user.password == self.password:
                 self.user = user
+                self.user_id = user.id
                 return rx.redirect("/home")
             else:
                 return rx.window_alert("ユーザー名またはパスワードが正しくありません。")
