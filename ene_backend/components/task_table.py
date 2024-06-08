@@ -10,8 +10,73 @@ def show_task(task: Task):
         rx.table.cell(task.name),
         rx.table.cell(task.priority),
         rx.table.cell(task.category),
-        rx.table.cell(task.deadline),
-        rx.table.cell(rx.button("詳細")),
+        rx.table.cell(task.deadline_convert),
+        rx.table.cell(
+            rx.dialog.root(
+                rx.dialog.trigger(
+                    rx.button(
+                        "詳細",
+                        on_click=lambda: TaskTableState.get_task(task),
+                    ),
+                ),
+                rx.dialog.content(
+                    rx.form(
+                        rx.dialog.title("タスク詳細"),
+                        rx.flex(
+                            rx.text("名前:"),
+                            rx.input(name="name", default_value=task.name, required=True),
+                            rx.text("優先度"),
+                            rx.select(["低", "中", "高"], default_value=task.priority, name="priority"),
+                            rx.text("カテゴリ"),
+                            rx.input(name="category", default_value=task.category),
+                            rx.text("締切日時:"),
+                            rx.input(
+                                name="deadline", type="datetime-local", default_value=task.deadline, required=True
+                            ),
+                            rx.text("詳細:"),
+                            rx.text_area(
+                                name="memo",
+                                value=task.memo,
+                                on_change=TaskTableState.set_memo,
+                            ),
+                            direction="column",
+                            spacing="3",
+                        ),
+                        rx.flex(
+                            rx.dialog.close(
+                                rx.button(
+                                    "閉じる",
+                                    color_scheme="gray",
+                                    variant="soft",
+                                ),
+                            ),
+                            rx.dialog.close(
+                                rx.button(
+                                    "削除",
+                                    color_scheme="red",
+                                    variant="soft",
+                                    type="reset",
+                                    on_click=TaskTableState.delete_task,
+                                ),
+                            ),
+                            rx.dialog.close(
+                                rx.button(
+                                    "更新",
+                                    color_scheme="green",
+                                    variant="soft",
+                                    type="submit",
+                                ),
+                            ),
+                            spacing="3",
+                            margin_top="16px",
+                            justify="end",
+                        ),
+                        on_submit=TaskTableState.update_task,
+                        reset_on_submit=True,
+                    ),
+                ),
+            )
+        ),
     )
 
 
