@@ -78,7 +78,7 @@ def navi_bar() -> rx.Component:
                 rx.button(
                     rx.icon(tag="settings"),
                     variant="solid",
-                    size="4",
+                    size="md",
                     on_click=rx.redirect("/user_profile"),
                     color_scheme="iris",
                     border_radius=styles.border_radius,
