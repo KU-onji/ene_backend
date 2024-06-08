@@ -1,13 +1,19 @@
 import reflex as rx
 
 from ..db_model import Task
+from ..state.chat_state import ChatState
 from ..state.task_state import TaskTableState
 
 
 def show_task(task: Task):
     """Show a task in a table row."""
     return rx.table.row(
-        rx.table.cell(rx.button("完了", on_click=TaskTableState.complete_task(task))),
+        rx.table.cell(
+            rx.button(
+                "完了",
+                on_click=lambda: ChatState.answer(task),
+            )
+        ),
         rx.table.cell(task.name),
         rx.table.cell(task.priority),
         rx.table.cell(task.category),

@@ -54,13 +54,6 @@ def button_boxes() -> rx.Component:
     """
     return rx.flex(
         rx.button(
-            rx.icon("message_circle"),
-            "ほめて！",
-            color_scheme="mint",
-            on_click=ChatState.answer,
-            **styles.button_box_style,
-        ),
-        rx.button(
             rx.icon("lightbulb"),
             "それAIでどうにかならない？",
             color_scheme="jade",
@@ -70,6 +63,7 @@ def button_boxes() -> rx.Component:
             rx.icon("trash-2"),
             "履歴をクリア",
             color_scheme="tomato",
+            on_click=ChatState.reflesh,
             **styles.button_box_style,
         ),
         rx.dialog.root(
