@@ -21,7 +21,7 @@ def create_compliment_prompt(username: str, taskname: str, duration: int, diffic
 
     li_username_prompt = ["KU-onji", "ふじ", "んど"]
     li_taskname_prompt = ["言語処理レポート", "牛乳買う", "バイト"]
-    li_duration_prompt = [300, 20, 85]
+    li_duration_prompt = [300, 20, 170]
     li_difficulty_prompt = [85, 15, 50]
     li_compliment_prompt = [
         "うん、いい感じじゃん。KU-onjiも頑張ってるし、私も頑張らなきゃな。ひとまず休憩だね。レポートお疲れ様。",
