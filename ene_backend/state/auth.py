@@ -1,7 +1,26 @@
+from typing import Optional
+
 import reflex as rx
 from sqlmodel import select
 
-from ene_backend.templates.template import ThemeState, User
+from ..db_model import User
+
+
+class ThemeState(rx.State):
+    """The state for the theme of the app."""
+
+    accent_color: str = "crimson"
+
+    gray_color: str = "gray"
+    user: Optional[User] = None
+
+    def check_login(self):
+        if not self.logged_in:
+            return rx.redirect("/")
+
+    @rx.var
+    def logged_in(self):
+        return self.user is not None
 
 
 class AuthState(ThemeState):
@@ -9,6 +28,7 @@ class AuthState(ThemeState):
     password: str
     confirm_password: str
     name: str | None
+    user_id: str
 
     def signup(self):
         with rx.session() as session:
@@ -27,6 +47,7 @@ class AuthState(ThemeState):
             user = session.exec(select(User).where(User.address == self.address)).first()
             if user and user.password == self.password:
                 self.user = user
+                self.user_id = user.id
                 return rx.redirect("/home")
             else:
                 return rx.window_alert("ユーザー名またはパスワードが正しくありません。")

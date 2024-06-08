@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..db_task import Task
+from ..db_model import Task
 from ..state.task_state import TaskTableState
 
 
