@@ -19,6 +19,16 @@ def create_request(username: str, taskname: str, duration: int, difficulty: int)
             f"褒め言葉: {compliment}\n\n"
         )
 
+    """ li_username_prompt = ["KU-onji", "ふじ", "んど"]
+    li_taskname_prompt = ["言語処理レポート", "牛乳買う", "バイト"]
+    li_duration_prompt = [300, 20, 85]
+    li_difficulty_prompt = [85, 15, 50]
+    li_compliment_prompt = [
+        "うん、いい感じじゃん。KU-onjiも頑張ってるし、私も頑張らなきゃな。ひとまず休憩だね。レポートお疲れ様。",
+        "いいね。あったかい牛乳でも飲む？",
+        "バイトお疲れ様。いい感じにこなせてるし、この調子で頑張ってね。",
+    ] """
+
     prompt = (
         "以下のフォーマットに従った入力が与えられます。フォーマットの内容に基づいて、親しい雰囲気でユーザーのことを褒めてください。"
         "ユーザーのモチベーションが上がるような褒め言葉が望ましいです。\n\n"
@@ -48,7 +58,7 @@ def create_request(username: str, taskname: str, duration: int, difficulty: int)
                 "role": "system",
                 "content": "You are a helpful assistant and have a plenty of knowledge about informatics.",
             },
-            {"role": "user", "content": ""},
+            {"role": "user", "content": prompt},
         ],
         "temperature": 0,
     }
