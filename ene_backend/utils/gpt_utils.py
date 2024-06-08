@@ -10,7 +10,32 @@ async def create_asyncClient() -> AsyncOpenAI:
 
 
 def create_request(username: str, taskname: str, duration: int, difficulty: int):
-    prompt = ""
+    def create_oneShot(username: str, taskname: str, duration: int, difficulty: int, compliment: str = ""):
+        return (
+            f"ユーザー名: {username}\n"
+            f"タスク: {taskname}\n"
+            f"所要時間: {str(duration)}\n"
+            f"難易度: {str(difficulty)}\n"
+            f"褒め言葉: {compliment}\n\n"
+        )
+
+    prompt = (
+        "以下のフォーマットに従った入力が与えられます。フォーマットの内容に基づいて、親しい雰囲気でユーザーのことを褒めてください。"
+        "ユーザーのモチベーションが上がるような褒め言葉が望ましいです。\n\n"
+        "ユーザー名: {ユーザーの名前}\n"
+        "タスク: {ユーザーが完了したタスク}\n"
+        "所要時間: {タスクにかかった時間; 単位は分}\n"
+        "難易度: {0から100で表されるタスクの難易度}\n"
+        "褒め言葉: {あなたの褒め言葉}\n\n"
+        "制約は以下の通りです。\n"
+        "- タスクの難易度が高く、所要時間が長いほど労いの気持ちを強める\n"
+        "- ユーザー名を含めるかどうかは任意\n"
+        "- タスクの内容を踏まえた褒め言葉を生成する\n"
+        "- 所要時間と難易度を出力してはいけない\n"
+        '- 一人称は"私"\n'
+        "- クールなお姉さんの口調で生成する\n\n"
+        "以下は出力例です。\n\n"
+    )
     prompt
     username
     taskname
