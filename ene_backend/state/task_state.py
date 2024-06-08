@@ -1,7 +1,7 @@
 import reflex as rx
 from sqlmodel import or_, select
 
-from ..db_model import Task
+from ..db_model import CompleteTask, Task
 from .auth import AuthState
 
 
@@ -32,13 +32,39 @@ def input_alert(input_dict: dict) -> bool:
 
 class TaskTableState(AuthState):
     tasks: list[Task] = []
+    comp_tasks: list[CompleteTask] = []
     current_task: Task = Task()
     memo: str = ""
-
-    search_value = ""
+    search_value: str = ""
 
     def get_task(self, task: Task):
         self.current_task = task
+
+    def complete_task(self, task: Task):
+        with rx.session() as session:
+            delete_task = session.exec(select(Task).where(Task.id == task["id"])).first()
+            session.delete(delete_task)
+            session.commit()
+        self.load_entries()
+
+        task.pop("id")
+        with rx.session() as session:
+            session.add(CompleteTask(**task))
+            session.commit()
+        self.comp_load_entries()
+
+    def cancel(self, task: CompleteTask):
+        with rx.session() as session:
+            delete_task = session.exec(select(CompleteTask).where(CompleteTask.id == task["id"])).first()
+            session.delete(delete_task)
+            session.commit()
+        self.comp_load_entries()
+
+        task.pop("id")
+        with rx.session() as session:
+            session.add(Task(**task))
+            session.commit()
+        self.load_entries()
 
     def update_task(self, input_dict: dict):
         if input_alert(input_dict):
@@ -101,3 +127,20 @@ class TaskTableState(AuthState):
             query = query.order_by(Task.deadline)
 
             self.tasks = session.exec(query).all()
+
+    def comp_load_entries(self) -> list[Task]:
+        """Get all users from the database."""
+        with rx.session() as session:
+            query = select(CompleteTask).where(CompleteTask.user_id == self.user_id)
+            if self.search_value != "":
+                search_value = f"%{self.search_value.lower()}%"
+                query = query.where(
+                    or_(
+                        CompleteTask.name.ilike(search_value),
+                        CompleteTask.category.ilike(search_value),
+                    )
+                )
+
+            query = query.order_by(CompleteTask.deadline)
+
+            self.comp_tasks = session.exec(query).all()

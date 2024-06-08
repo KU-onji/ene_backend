@@ -17,3 +17,15 @@ class Task(rx.Model, table=True):
     hour: str
     minute: str
     memo: str
+
+
+class CompleteTask(rx.Model, table=True):
+    user_id: str
+    name: str
+    priority: str
+    category: str
+    deadline: str
+    deadline_convert: str
+    hour: str
+    minute: str
+    memo: str
