@@ -1,7 +1,8 @@
 import reflex as rx
 from sqlmodel import or_, select
 
-from ..db_task import Task
+from ..db_model import Task
+from .auth import AuthState
 
 
 def validate_time(hour: str, minute: str) -> bool:
@@ -33,6 +34,7 @@ class TaskTableState(rx.State):
     tasks: list[Task] = []
     current_task: Task = Task()
     memo: str = ""
+    user_id: str
 
     search_value = ""
 
@@ -47,6 +49,7 @@ class TaskTableState(rx.State):
         input_dict["deadline_convert"] = deadline
         if not validate_time(input_dict["hour"], input_dict["minute"]):
             return rx.window_alert("所要時間の形式が正しくありません")
+        input_dict["user_id"] = AuthState.address
         self.current_task.update(input_dict)
         with rx.session() as session:
             task = session.exec(select(Task).where(Task.id == self.current_task["id"])).first()
@@ -72,6 +75,7 @@ class TaskTableState(rx.State):
         input_dict["deadline_convert"] = deadline
         if not validate_time(input_dict["hour"], input_dict["minute"]):
             return rx.window_alert("所要時間の形式が正しくありません")
+        input_dict["user_id"] = AuthState.address
         self.current_task = input_dict
         with rx.session() as session:
             session.add(Task(**self.current_task))
@@ -84,9 +88,11 @@ class TaskTableState(rx.State):
 
     def load_entries(self) -> list[Task]:
         """Get all users from the database."""
+        print(type(AuthState.get_address()))
+        setattr(self, "user_id", AuthState.address)
+        print(type(self.user_id))
         with rx.session() as session:
-            query = select(Task)
-
+            query = select(Task).where(Task.user_id == self.user_id)
             if self.search_value != "":
                 search_value = f"%{self.search_value.lower()}%"
                 query = query.where(
