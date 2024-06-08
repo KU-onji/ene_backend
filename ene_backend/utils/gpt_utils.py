@@ -9,7 +9,13 @@ async def create_asyncClient() -> AsyncOpenAI:
     return client
 
 
-def create_request(prompt):
+def create_request(username: str, taskname: str, duration: int, difficulty: int):
+    prompt = ""
+    prompt
+    username
+    taskname
+    duration
+    difficulty
     return {
         "model": "gpt-4o",
         "messages": [
@@ -17,7 +23,7 @@ def create_request(prompt):
                 "role": "system",
                 "content": "You are a helpful assistant and have a plenty of knowledge about informatics.",
             },
-            {"role": "user", "content": prompt},
+            {"role": "user", "content": ""},
         ],
         "temperature": 0,
     }
