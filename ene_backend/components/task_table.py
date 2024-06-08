@@ -23,17 +23,46 @@ def show_task(task: Task):
                     rx.form(
                         rx.dialog.title("タスク詳細"),
                         rx.flex(
-                            rx.text("名前:"),
-                            rx.input(name="name", default_value=task.name, required=True),
-                            rx.text("優先度"),
-                            rx.select(["低", "中", "高"], default_value=task.priority, name="priority"),
-                            rx.text("カテゴリ"),
-                            rx.input(name="category", default_value=task.category),
-                            rx.text("締切日時:"),
-                            rx.input(
-                                name="deadline", type="datetime-local", default_value=task.deadline, required=True
+                            rx.hstack(
+                                rx.text("名前"),
+                                rx.text("【必須】", color_scheme="red"),
+                                spacing="2",
                             ),
-                            rx.text("詳細:"),
+                            rx.input(name="name", default_value=task.name),
+                            rx.hstack(
+                                rx.text("優先度"),
+                                rx.text("【必須】", color_scheme="red"),
+                                spacing="2",
+                            ),
+                            rx.select(["低", "中", "高"], default_value=task.priority, name="priority"),
+                            rx.hstack(
+                                rx.text("優先度"),
+                                rx.text("【任意】", color_scheme="gray"),
+                                spacing="2",
+                            ),
+                            rx.input(name="category", default_value=task.category),
+                            rx.hstack(
+                                rx.text("締切日時"),
+                                rx.text("【必須】", color_scheme="red"),
+                                spacing="2",
+                            ),
+                            rx.input(name="deadline", type="datetime-local", default_value=task.deadline),
+                            rx.hstack(
+                                rx.text("所要時間"),
+                                rx.text("【必須】", color_scheme="red"),
+                                spacing="2",
+                            ),
+                            rx.hstack(
+                                rx.input(name="hour", default_value=task.hour),
+                                rx.text("時間"),
+                                rx.input(name="minute", default_value=task.minute),
+                                rx.text("分"),
+                            ),
+                            rx.hstack(
+                                rx.text("メモ"),
+                                rx.text("【任意】", color_scheme="gray"),
+                                spacing="2",
+                            ),
                             rx.text_area(
                                 name="memo",
                                 value=task.memo,

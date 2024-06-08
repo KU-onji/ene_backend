@@ -80,15 +80,46 @@ def button_boxes() -> rx.Component:
                 rx.form(
                     rx.dialog.title("タスクを追加"),
                     rx.flex(
-                        rx.text("名前:"),
-                        rx.input(name="name", required=True),
-                        rx.text("優先度"),
+                        rx.hstack(
+                            rx.text("名前"),
+                            rx.text("【必須】", color_scheme="red"),
+                            spacing="2",
+                        ),
+                        rx.input(name="name"),
+                        rx.hstack(
+                            rx.text("優先度"),
+                            rx.text("【必須】", color_scheme="red"),
+                            spacing="2",
+                        ),
                         rx.select(["低", "中", "高"], default_value="高", name="priority"),
-                        rx.text("カテゴリ"),
+                        rx.hstack(
+                            rx.text("カテゴリ"),
+                            rx.text("【任意】", color_scheme="gray"),
+                            spacing="2",
+                        ),
                         rx.input(name="category"),
-                        rx.text("締切日時:"),
-                        rx.input(name="deadline", type="datetime-local", required=True),
-                        rx.text("詳細:"),
+                        rx.hstack(
+                            rx.text("締切日時"),
+                            rx.text("【必須】", color_scheme="red"),
+                            spacing="2",
+                        ),
+                        rx.input(name="deadline", type="datetime-local"),
+                        rx.hstack(
+                            rx.text("所要時間"),
+                            rx.text("【必須】", color_scheme="red"),
+                            spacing="2",
+                        ),
+                        rx.hstack(
+                            rx.input(name="hour", default_value="1", width="8%"),
+                            rx.text("時間"),
+                            rx.input(name="minute", default_value="0", width="8%"),
+                            rx.text("分"),
+                        ),
+                        rx.hstack(
+                            rx.text("メモ"),
+                            rx.text("【任意】", color_scheme="gray"),
+                            spacing="2",
+                        ),
                         rx.text_area(name="memo"),
                         direction="column",
                         spacing="3",
