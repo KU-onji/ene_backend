@@ -63,7 +63,6 @@ def button_boxes() -> rx.Component:
             rx.icon("lightbulb"),
             "それAIでどうにかならない？",
             color_scheme="jade",
-            on_click=ChatState.answer,
             **styles.button_box_style,
         ),
         rx.button(
