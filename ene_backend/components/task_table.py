@@ -7,6 +7,7 @@ from ..state.task_state import TaskTableState
 def show_task(task: Task):
     """Show a task in a table row."""
     return rx.table.row(
+        rx.table.cell(rx.button("完了", on_click=TaskTableState.complete_task(task))),
         rx.table.cell(task.name),
         rx.table.cell(task.priority),
         rx.table.cell(task.category),
@@ -116,6 +117,7 @@ def task_table() -> rx.Component:
                 rx.input.slot(
                     rx.icon(tag="search"),
                 ),
+                default_value=TaskTableState.search_value,
                 placeholder="Search here...",
                 on_change=lambda value: TaskTableState.filter_values(value),
             ),
@@ -127,6 +129,7 @@ def task_table() -> rx.Component:
             rx.table.root(
                 rx.table.header(
                     rx.table.row(
+                        rx.table.column_header_cell("完了"),
                         rx.table.column_header_cell("名前"),
                         rx.table.column_header_cell("優先度"),
                         rx.table.column_header_cell("カテゴリ"),

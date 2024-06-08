@@ -3,19 +3,19 @@ import reflex as rx
 from ene_backend import styles
 
 
-def icon_dialog(dialog: tuple[str, str]) -> rx.Component:
+def icon_dialog(user_message: str, system_response: str) -> rx.Component:
     """Create a dialog box with icons.
 
     Args:
-        dialog: A pair of user message and system response.
+        user_message: The message from the user.
+        system_response: The response from the system.
 
     Returns:
         The dialog box component.
     """
-    user_message, system_response = dialog
     return rx.vstack(
         rx.box(
-            rx.markdown(
+            rx.text(
                 user_message,
                 background_color=rx.color("mint", 4),
                 **styles.message_style,
@@ -26,7 +26,7 @@ def icon_dialog(dialog: tuple[str, str]) -> rx.Component:
             _hover={"transform": "scale(1.1)"},
         ),
         rx.box(
-            rx.markdown(
+            rx.text(
                 system_response,
                 background_color=rx.color("gray", 5),
                 **styles.message_style,
