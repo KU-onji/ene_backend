@@ -7,6 +7,7 @@ from ..db_task import Task
 class TaskTableState(rx.State):
     tasks: list[Task] = []
     current_task: Task = Task()
+    memo: str = ""
 
     search_value = ""
 
@@ -14,7 +15,6 @@ class TaskTableState(rx.State):
         self.current_task = task
 
     def update_task(self, input_dict: dict):
-        print("call")
         deadline = input_dict["deadline"]
         deadline = deadline.replace("-", "/").replace("T", " ")
         input_dict["deadline_convert"] = deadline

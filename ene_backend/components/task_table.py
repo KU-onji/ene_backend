@@ -34,7 +34,11 @@ def show_task(task: Task):
                                 name="deadline", type="datetime-local", default_value=task.deadline, required=True
                             ),
                             rx.text("詳細:"),
-                            rx.text_area(name="memo", default_value=task.memo),
+                            rx.text_area(
+                                name="memo",
+                                value=task.memo,
+                                on_change=TaskTableState.set_memo,
+                            ),
                             direction="column",
                             spacing="3",
                         ),
