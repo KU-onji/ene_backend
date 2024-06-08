@@ -167,7 +167,7 @@ def right_box() -> rx.Component:
     )
 
 
-@template(route="/home", title="ホーム", on_load=ThemeState.check_login())
+@template(route="/home", title="ホーム", on_load=ThemeState.check_login)
 def home() -> rx.Component:
     """The home page.
 
