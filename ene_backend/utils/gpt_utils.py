@@ -72,6 +72,18 @@ def create_request(system_prompt: str, user_prompt: str, model: str) -> dict:
     }
 
 
+def create_partition_prompt(taskname: str):
+    system_prompt = (
+        "文字列で説明されたタスクが一つ与えられます。与えられるタスクを数個の小さなタスクに分解してください。\n"
+        "また、分解されたそれぞれのタスクに対し、予想される所要時間も出力してください。\n"
+        "ただし、分解したタスクは次の形式で出力してください。分解したタスク以外の文章は出力しないでください。\n"
+        "(タスク１:所要時間１),(タスク２:所要時間２),...,(タスクN:所要時間N)\n"
+        "次のタスクを分解してください："
+    )
+
+    return {"user_prompt": taskname, "system_prompt": system_prompt, "model": "GPT-3.5", "temparature": 0}
+
+
 @retry(stop=stop_after_attempt(2), wait=wait_fixed(1))
 async def call_gpt_async(client: AsyncOpenAI, prompt: str) -> tuple[str, int]:
     try:
