@@ -5,7 +5,7 @@ from tenacity import RetryError, retry, stop_after_attempt, wait_fixed
 
 
 def create_Client() -> OpenAI:
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY_KUMA"), timeout=15, max_retries=3)
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY_ENE"), timeout=15, max_retries=3)
     return client
 
 
