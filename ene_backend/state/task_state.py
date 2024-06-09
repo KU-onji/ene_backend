@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import reflex as rx
 from sqlmodel import case, or_, select
 
@@ -37,6 +39,7 @@ class TaskTableState(AuthState):
     memo: str = ""
     search_value: str = ""
     sort_value: str = "日付"
+    fav: int = 0
 
     def get_task(self, task: Task):
         self.current_task = task
@@ -49,6 +52,7 @@ class TaskTableState(AuthState):
         self.load_entries()
 
         task.pop("id")
+        task["complete_date"] = datetime.now()
         with rx.session() as session:
             session.add(CompleteTask(**task))
             session.commit()
@@ -62,10 +66,18 @@ class TaskTableState(AuthState):
         self.comp_load_entries()
 
         task.pop("id")
+        task.pop("complete_date")
         with rx.session() as session:
             session.add(Task(**task))
             session.commit()
         self.load_entries()
+
+    def calculate_fav(self):
+        sum_duration = 0
+        for task in self.comp_tasks:
+            sum_duration += int(task.hour) * 60 + int(task.minute)
+        return min(int((sum_duration / 720) * 100), 100)
+        # return min(int((sum_duration / 300) * 100), 100) # for demo
 
     def update_task(self, input_dict: dict):
         if input_alert(input_dict):
@@ -142,6 +154,15 @@ class TaskTableState(AuthState):
         """Get all users from the database."""
         with rx.session() as session:
             query = select(CompleteTask).where(CompleteTask.user_id == self.user_id)
+            query = query.where(CompleteTask.complete_date < datetime.now() - timedelta(days=7))
+            delete_tasks = session.exec(query).all()
+            if delete_tasks is not None:
+                for task in delete_tasks:
+                    session.delete(task)
+                session.commit()
+
+        with rx.session() as session:
+            query = select(CompleteTask).where(CompleteTask.user_id == self.user_id)
             if self.search_value != "":
                 search_value = f"%{self.search_value.lower()}%"
                 query = query.where(
@@ -154,3 +175,4 @@ class TaskTableState(AuthState):
             query = query.order_by(CompleteTask.deadline)
 
             self.comp_tasks = session.exec(query).all()
+            self.fav = self.calculate_fav()

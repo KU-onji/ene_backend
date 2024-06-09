@@ -11,7 +11,7 @@ class ChatState(TaskTableState):
     def get_response(self, task: Task) -> str:
         client = create_Client()
         duration = int(task["hour"]) * 60 + int(task["minute"])
-        prompt = create_compliment_prompt(username=self.name, taskname=task["name"], duration=duration)
+        prompt = create_compliment_prompt(username=self.name, taskname=task["name"], duration=duration, fav=self.fav)
         return call_gpt(client, prompt)
 
     def reflesh(self) -> None:
