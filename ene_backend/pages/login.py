@@ -102,7 +102,7 @@ def login_single_thirdparty() -> rx.Component:
                 ),
                 rx.button(
                     rx.image(
-                        src="/google.jpg",
+                        src="/google.svg",
                         width="1.5em",
                         height="auto",
                         border_radius="25%",

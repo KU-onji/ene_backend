@@ -3,13 +3,16 @@ from typing import Literal
 import reflex as rx
 
 from ene_backend import styles
-from ene_backend.components import (  # suggestion,
+
+from ene_backend.components import (
+    complete_task,
     content_tab,
     decompose,
     icon_dialog,
     my_calendar,
     task_table,
 )
+from ene_backend.state.chat_state import ChatState
 from ene_backend.templates import template
 from ene_backend.templates.template import ThemeState
 
@@ -24,14 +27,16 @@ def content_field(
     *contents: rx.Component,
 ) -> rx.Component:
     return rx.box(
-        rx.vstack(
-            *contents,
-            spacing="2",
-            width="100%",
-            height="100%",
-            align=align,
-            justify=justify,
-            # _hover={"background": "green"},  # for debugging
+        rx.scroll_area(
+            rx.vstack(
+                *contents,
+                spacing="2",
+                width="100%",
+                height="100%",
+                align=align,
+                justify=justify,
+                # _hover={"background": "green"},  # for debugging
+            ),
         ),
         border_radius="0.5em",
         padding="1em",
@@ -87,6 +92,7 @@ def button_boxes() -> rx.Component:
             rx.icon("trash-2"),
             "履歴をクリア",
             color_scheme="tomato",
+            on_click=ChatState.reflesh,
             **styles.button_box_style,
         ),
         rx.dialog.root(
@@ -186,6 +192,7 @@ def left_box() -> rx.Component:
                 content_tab.content_tab(
                     (my_calendar.calendar_view(), "カレンダー"),
                     (task_table.task_table(), "タスク一覧"),
+                    (complete_task.task_table(), "完了タスク"),
                 ),
             ),
             justify="center",
@@ -207,8 +214,10 @@ def right_box() -> rx.Component:
             "80%",
             "start",
             "start",
-            icon_dialog.icon_dialog(("Hello", "Hi")),
-            icon_dialog.icon_dialog(("How are you?", "I'm fine.")),
+            rx.foreach(
+                ChatState.chat_history,
+                lambda dialog: icon_dialog.icon_dialog(dialog[0], dialog[1]),
+            ),
         ),
         button_boxes(),
         direction="column",

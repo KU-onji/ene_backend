@@ -5,6 +5,8 @@ import reflex as rx
 
 from ene_backend import styles
 
+from ..state.auth import AuthState
+
 
 class CurrentTimeState(rx.State):
     current_date: str = datetime.now().strftime("%Y/%m/%d")
@@ -70,7 +72,7 @@ def navi_bar() -> rx.Component:
             # UserName and config button
             rx.hstack(
                 rx.text(
-                    "KU-onji",  # tentative
+                    AuthState.name,  # tentative
                     font_size="2em",
                     color=rx.color_mode_cond("white", "black"),
                 ),

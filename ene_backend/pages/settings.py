@@ -2,6 +2,7 @@
 
 import reflex as rx
 
+# from ene_backend.components import background
 from ene_backend.templates import ThemeState, template
 
 
@@ -73,4 +74,5 @@ def settings() -> rx.Component:
             rx.code("{your_app}/pages/settings.py"),
             size="1",
         ),
+        # background.background(),
     )
