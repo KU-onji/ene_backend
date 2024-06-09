@@ -149,6 +149,7 @@ class TaskTableState(AuthState):
                     query = query.order_by(Task.deadline)
 
             self.tasks = session.exec(query).all()
+        self.comp_load_entries()
 
     @rx.var
     def str_task_list(self) -> list[str]:
