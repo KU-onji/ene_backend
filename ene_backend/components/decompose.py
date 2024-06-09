@@ -26,7 +26,6 @@ class DecomposeTaskState(rx.State):
         def decomposed_task_list(task_name: str) -> list[str]:
             client = create_Client()
             gpt_results = call_gpt(client, create_partition_prompt(task_name))
-            # gpt_results = "(new task:1 hour),(new task2:30 min)"
             decomposed_list = gpt_results.split(",")
             task_name_list = []
             for task in decomposed_list:

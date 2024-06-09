@@ -53,34 +53,6 @@ def button_boxes() -> rx.Component:
         The button to add a task.
     """
     return rx.flex(
-        rx.dialog.root(
-            rx.dialog.trigger(
-                rx.button(
-                    rx.icon("lightbulb"),
-                    "それAIでどうにかならない？",
-                    color_scheme="jade",
-                    **styles.button_box_style,
-                ),
-            ),
-            rx.dialog.content(
-                rx.form(
-                    rx.dialog.title("タスクの因数分解"),
-                    rx.form.root(
-                        rx.vstack(
-                            rx.select(
-                                TaskTableState.str_task_list,
-                                name="selected_task",
-                                variant="soft",
-                                radius="full",
-                                width="100%",
-                                on_change=decompose.DecomposeTaskState.set_selected_task,
-                            ),
-                            rx.button("Decompose", on_click=decompose.DecomposeTaskState.reflect_selected_task),
-                        ),
-                    ),
-                )
-            ),
-        ),
         rx.button(
             rx.icon("trash-2"),
             "履歴をクリア",
