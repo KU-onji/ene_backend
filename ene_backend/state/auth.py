@@ -36,11 +36,11 @@ class AuthState(ThemeState):
                 return rx.window_alert("確認用のパスワードが一致しません")
             if session.exec(select(User).where(User.address == self.address)).first():
                 return rx.window_alert("すでに登録されているメールアドレスです")
-            self.user = User(address=self.address, password=self.password)
+            self.user = User(address=self.address, password=self.password, name=self.name)
             session.add(self.user)
             session.expire_on_commit = False
             session.commit()
-            return rx.redirect("/")
+            return rx.redirect("/home")
 
     def login(self):
         with rx.session() as session:
@@ -65,5 +65,6 @@ class AuthState(ThemeState):
                     user.name = self.name
                 session.expire_on_commit = False
                 session.commit()
+                return rx.redirect("/home")
             else:
                 return rx.window_alert("パスワードが正しくありません。")

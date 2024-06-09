@@ -53,6 +53,7 @@ header_style = {
     "position": "fixed",
     "padding": "1em 2em",
     "width": "100%",
+    "height": "13ex",
     "top": "0px",
     "z_index": "500",
 }

@@ -131,25 +131,30 @@ def task_table() -> rx.Component:
             rx.select(["日付", "優先度"], default_value="日付", on_change=TaskTableState.sort_values),
             spacing="2",
         ),
-        rx.scroll_area(
-            rx.table.root(
-                rx.table.header(
-                    rx.table.row(
-                        rx.table.column_header_cell("完了"),
-                        rx.table.column_header_cell("名前"),
-                        rx.table.column_header_cell("優先度"),
-                        rx.table.column_header_cell("カテゴリ"),
-                        rx.table.column_header_cell("締切日時"),
-                        rx.table.column_header_cell("詳細"),
+        rx.box(
+            rx.scroll_area(
+                rx.table.root(
+                    rx.table.header(
+                        rx.table.row(
+                            rx.table.column_header_cell("完了"),
+                            rx.table.column_header_cell("名前"),
+                            rx.table.column_header_cell("優先度"),
+                            rx.table.column_header_cell("カテゴリ"),
+                            rx.table.column_header_cell("締切日時"),
+                            rx.table.column_header_cell("詳細"),
+                        ),
                     ),
+                    rx.table.body(
+                        rx.foreach(TaskTableState.tasks, show_task),
+                    ),
+                    on_mount=TaskTableState.load_entries,
                 ),
-                rx.table.body(
-                    rx.foreach(TaskTableState.tasks, show_task),
-                ),
-                on_mount=TaskTableState.load_entries,
+                type="auto",
+                scrollbars="vertical",
+                height="100%",
+                width="100%",
             ),
-            type="auto",
-            scrollbars="vertical",
-            height="15em",
+            height="100%",
+            width="100%",
         ),
     )
