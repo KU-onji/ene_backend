@@ -99,3 +99,7 @@ class TaskTableState(rx.State):
             query = query.order_by(Task.deadline)
 
             self.tasks = session.exec(query).all()
+
+    @rx.var
+    def str_task_list(self) -> list[str]:
+        return [f"{task.name}" for task in self.tasks]

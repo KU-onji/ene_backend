@@ -67,19 +67,18 @@ def button_boxes() -> rx.Component:
             rx.dialog.content(
                 rx.form(
                     rx.dialog.title("タスクの因数分解"),
-                    rx.vstack(
-                        rx.grid(
-                            rx.foreach(
-                                TaskTableState.tasks,
-                                lambda task: rx.button(
-                                    f"{task.name}",
-                                    on_click=decompose.DecomposeTaskState.change_original_task(f"{task.name}"),
-                                ),
+                    rx.form.root(
+                        rx.vstack(
+                            rx.select(
+                                TaskTableState.str_task_list,
+                                name="selected_task",
+                                variant="soft",
+                                radius="full",
+                                width="100%",
+                                on_change=decompose.DecomposeTaskState.set_selected_task,
                             ),
-                            width="100%",
-                            columns="4",
-                            spacing="5",
-                        )
+                            rx.button("Decompose", on_click=decompose.DecomposeTaskState.reflect_selected_task),
+                        ),
                     ),
                 )
             ),
