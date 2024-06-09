@@ -75,9 +75,9 @@ class TaskTableState(AuthState):
     def calculate_fav(self):
         sum_duration = 0
         for task in self.comp_tasks:
-            sum_duration += int(task["hour"]) * 60 + int(task["minute"])
-        # return min(int((sum_duration / 300) * 100), 100)  # for debug
-        return min(int((sum_duration / 1440) * 100), 100)
+            sum_duration += int(task.hour) * 60 + int(task.minute)
+        return min(int((sum_duration / 720) * 100), 100)
+        # return min(int((sum_duration / 300) * 100), 100) # for demo
 
     def update_task(self, input_dict: dict):
         if input_alert(input_dict):
