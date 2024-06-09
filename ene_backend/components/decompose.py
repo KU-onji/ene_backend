@@ -7,9 +7,9 @@ from ..utils.gpt_utils import call_gpt, create_Client, create_partition_prompt
 
 
 class DecomposeTaskState(rx.State):
-    original_task: str = "AIで分解"
+    original_task: str = "分解するタスクを選択"
     selected_task: str = ""
-    previous_task: str = "AIで分解"
+    previous_task: str = "分解するタスクを選択"
     decomposed_task_list: list[str] = []
 
     def change_original_task(self, original_task: str):
