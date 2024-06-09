@@ -3,12 +3,13 @@ from typing import Literal
 import reflex as rx
 
 from ene_backend import styles
+
 from ene_backend.components import (
     complete_task,
     content_tab,
+    decompose,
     icon_dialog,
     my_calendar,
-    suggestion,
     task_table,
 )
 from ene_backend.state.chat_state import ChatState
@@ -54,10 +55,38 @@ def button_boxes() -> rx.Component:
     """
     return rx.flex(
         rx.button(
-            rx.icon("lightbulb"),
-            "それAIでどうにかならない？",
-            color_scheme="jade",
+            rx.icon("message_circle"),
+            "ほめて！",
+            color_scheme="mint",
             **styles.button_box_style,
+        ),
+        rx.dialog.root(
+            rx.dialog.trigger(
+                rx.button(
+                    rx.icon("lightbulb"),
+                    "それAIでどうにかならない？",
+                    color_scheme="jade",
+                    **styles.button_box_style,
+                ),
+            ),
+            rx.dialog.content(
+                rx.form(
+                    rx.dialog.title("タスクの因数分解"),
+                    rx.form.root(
+                        rx.vstack(
+                            rx.select(
+                                TaskTableState.str_task_list,
+                                name="selected_task",
+                                variant="soft",
+                                radius="full",
+                                width="100%",
+                                on_change=decompose.DecomposeTaskState.set_selected_task,
+                            ),
+                            rx.button("Decompose", on_click=decompose.DecomposeTaskState.reflect_selected_task),
+                        ),
+                    ),
+                )
+            ),
         ),
         rx.button(
             rx.icon("trash-2"),
@@ -154,7 +183,7 @@ def button_boxes() -> rx.Component:
 def left_box() -> rx.Component:
     return rx.box(
         rx.vstack(
-            content_field("100%", "40%", "center", "between", suggestion.suggestion()),
+            content_field("100%", "40%", "center", "between", decompose.decomposed_task_box()),
             content_field(
                 "100%",
                 "60%",

@@ -150,6 +150,10 @@ class TaskTableState(AuthState):
 
             self.tasks = session.exec(query).all()
 
+    @rx.var
+    def str_task_list(self) -> list[str]:
+        return [f"{task.name}" for task in self.tasks]
+
     def comp_load_entries(self) -> list[Task]:
         """Get all users from the database."""
         with rx.session() as session:
