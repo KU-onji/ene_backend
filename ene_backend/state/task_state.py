@@ -76,7 +76,8 @@ class TaskTableState(AuthState):
         sum_duration = 0
         for task in self.comp_tasks:
             sum_duration += int(task["hour"]) * 60 + int(task["minute"])
-        self.fav = min(int((sum_duration / 1440) * 100), 100)
+        return min(int((sum_duration / 300) * 100), 100)  # for debug
+        # return min(int((sum_duration / 1440) * 100), 100)
 
     def update_task(self, input_dict: dict):
         if input_alert(input_dict):
@@ -153,7 +154,7 @@ class TaskTableState(AuthState):
         """Get all users from the database."""
         with rx.session() as session:
             query = select(CompleteTask).where(CompleteTask.user_id == self.user_id)
-            query = query.where(CompleteTask.complete_date < datetime.now() - timedelta(seconds=20))
+            query = query.where(CompleteTask.complete_date < datetime.now() - timedelta(days=7))
             delete_tasks = session.exec(query).all()
             if delete_tasks is not None:
                 for task in delete_tasks:
@@ -174,3 +175,4 @@ class TaskTableState(AuthState):
             query = query.order_by(CompleteTask.deadline)
 
             self.comp_tasks = session.exec(query).all()
+            self.fav = self.calculate_fav()
