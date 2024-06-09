@@ -42,11 +42,10 @@ def navi_bar() -> rx.Component:
     return rx.box(
         rx.hstack(
             # Logo (tentative)
-            rx.box(
-                rx.text("ene", font_size="2em", color="iris", align="center"),
-                padding_x="1em",
-                border_radius=styles.border_radius,
-                background=rx.color_mode_cond("lightgray", "black"),
+            rx.image(
+                src="/logo.png",
+                height="3em",
+                width="auto",
             ),
             # Clock (to be implemented)
             rx.center(

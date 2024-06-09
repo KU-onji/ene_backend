@@ -113,7 +113,7 @@ def template(
                     height="calc(100vh - 7em)",
                     **styles.template_page_style,
                 ),
-                menu_button(),
+                # menu_button(),
                 background=f"radial-gradient(circle at top right, {rx.color('accent', 2)}, {rx.color('mauve', 1)});",
                 position="relative",
                 width="100%",

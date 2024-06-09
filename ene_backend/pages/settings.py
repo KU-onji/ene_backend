@@ -3,10 +3,9 @@
 import reflex as rx
 
 # from ene_backend.components import background
-from ene_backend.templates import ThemeState, template
+from ene_backend.templates import ThemeState
 
 
-@template(route="/settings", title="Settings")
 def settings() -> rx.Component:
     """The settings page.
 

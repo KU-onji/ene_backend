@@ -6,7 +6,7 @@ import reflex as rx
 class User(rx.Model, table=True):
     address: str
     password: str
-    name: str | None
+    name: str
 
 
 class Task(rx.Model, table=True):

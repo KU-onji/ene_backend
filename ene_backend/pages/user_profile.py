@@ -42,6 +42,7 @@ def profile() -> rx.Component:
                     rx.input(
                         placeholder="新しいニックネーム",
                         name="name",
+                        default_value=AuthState.name,
                     ),
                     rx.text(
                         "パスワードを入力",
