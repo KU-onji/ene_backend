@@ -5,34 +5,37 @@ from tenacity import RetryError, retry, stop_after_attempt, wait_fixed
 
 
 def create_Client() -> OpenAI:
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY_ENE"), timeout=15, max_retries=3)
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY_KUMA"), timeout=15, max_retries=3)
     return client
 
 
-def create_compliment_prompt(username: str, taskname: str, duration: int):
-    def create_oneShot(username: str, taskname: str, duration: int, compliment: str = "") -> str:
+def create_compliment_prompt(username: str, taskname: str, duration: int, fav: int):
+    def create_oneShot(username: str, taskname: str, duration: int, fav: int, compliment: str = "") -> str:
         return (
             f"ユーザー名: {username}\n"
             f"タスク: {taskname}\n"
-            f"所要時間: {str(duration)}\n"
+            f"所要時間: {duration}\n"
+            f"好感度: {fav}\n"
             f"褒め言葉: {compliment}"
         )
 
     li_username_prompt = ["KU-onji", "ふじ", "んど"]
     li_taskname_prompt = ["言語処理レポート", "牛乳買う", "バイト"]
     li_duration_prompt = [300, 20, 170]
+    li_fav_prompt = [100, 0, 50]
     li_compliment_prompt = [
         "うん、いい感じじゃん。KU-onjiも頑張ってるし、私も頑張らなきゃな。ひとまず休憩だね。レポートお疲れ様。",
-        "いいね。あったかい牛乳でも飲む？",
+        "そう、よかったね。",
         "バイトお疲れ様。いい感じにこなせてるし、この調子で頑張ってね。",
     ]
 
     shots = [
-        create_oneShot(un, tn, dr, com)
-        for un, tn, dr, com in zip(
+        create_oneShot(un, tn, dr, fav, com)
+        for un, tn, dr, fav, com in zip(
             li_username_prompt,
             li_taskname_prompt,
             li_duration_prompt,
+            li_fav_prompt,
             li_compliment_prompt,
         )
     ]
@@ -42,18 +45,20 @@ def create_compliment_prompt(username: str, taskname: str, duration: int):
         "ユーザー名: {ユーザーの名前}\n"
         "タスク: {ユーザーが完了したタスク}\n"
         "所要時間: {タスクにかかった時間; 単位は分}\n"
+        "好感度: {ユーザーに対する好感度; 0から100}\n"
         "褒め言葉: {あなたの褒め言葉}\n\n"
         "制約は以下の通りです。\n"
         "- タスクの難易度をタスク名と所要時間から推定し、タスクの難易度が高く、所要時間が長いほど労いの気持ちを強める\n"
-        "- ユーザー名を含めるかどうかは任意\n"
+        "- 二人称はユーザー名を用いる\n"
         "- タスクの内容を踏まえた褒め言葉を生成する\n"
         "- 所要時間と難易度を出力してはいけない\n"
+        "- 好感度が高いほど労いの気持ちを込めてより具体的に褒め、好感度が低いほど興味がなくそっけない感じで褒める\n"
         '- 一人称は"私"\n'
         "- クールなお姉さんの口調で生成する\n\n"
         "以下は出力例です。\n\n"
         f"{''.join(shots)}"
     )
-    user_prompt = create_oneShot(username, taskname, duration, "")
+    user_prompt = create_oneShot(username, taskname, duration, fav, "")
     return {"system_prompt": system_prompt, "user_prompt": user_prompt, "model": "gpt-4o", "temperature": 1}
 
 

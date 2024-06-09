@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import reflex as rx
 
 
@@ -29,3 +31,4 @@ class CompleteTask(rx.Model, table=True):
     hour: str
     minute: str
     memo: str
+    complete_date: datetime

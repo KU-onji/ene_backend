@@ -18,6 +18,9 @@ def show_task(task: CompleteTask):
 def task_table() -> rx.Component:
     return rx.vstack(
         rx.input(
+            rx.input.slot(
+                rx.icon(tag="search"),
+            ),
             default_value=TaskTableState.search_value,
             placeholder="Search here...",
             on_change=lambda value: TaskTableState.filter_values(value),
