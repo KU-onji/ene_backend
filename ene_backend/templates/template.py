@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Callable, Optional
+from typing import Callable
 
 import reflex as rx
 
 from ene_backend import styles
 from ene_backend.components.header import navi_bar
-from ene_backend.db_model import User
+
+from ..state.auth import ThemeState
 
 # Meta tags for the app.
 default_meta = [
@@ -64,23 +65,6 @@ def menu_button() -> rx.Component:
     )
 
 
-class ThemeState(rx.State):
-    """The state for the theme of the app."""
-
-    accent_color: str = "crimson"
-
-    gray_color: str = "gray"
-    user: Optional[User] = None
-
-    def check_login(self):
-        if not self.logged_in:
-            return rx.redirect("/")
-
-    @rx.var
-    def logged_in(self):
-        return self.user is not None
-
-
 def template(
     route: str | None = None,
     title: str | None = None,
@@ -129,7 +113,7 @@ def template(
                     height="calc(100vh - 7em)",
                     **styles.template_page_style,
                 ),
-                menu_button(),
+                # menu_button(),
                 background=f"radial-gradient(circle at top right, {rx.color('accent', 2)}, {rx.color('mauve', 1)});",
                 position="relative",
                 width="100%",

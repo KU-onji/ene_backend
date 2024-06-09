@@ -3,13 +3,14 @@ from typing import Literal
 import reflex as rx
 
 from ene_backend import styles
-from ene_backend.components import (
+from ene_backend.components import (  # my_calendar,
+    complete_task,
     content_tab,
+    decompose,
     icon_dialog,
-    my_calendar,
-    suggestion,
     task_table,
 )
+from ene_backend.state.chat_state import ChatState
 from ene_backend.templates import template
 from ene_backend.templates.template import ThemeState
 
@@ -24,14 +25,16 @@ def content_field(
     *contents: rx.Component,
 ) -> rx.Component:
     return rx.box(
-        rx.vstack(
-            *contents,
-            spacing="2",
-            width="100%",
-            height="100%",
-            align=align,
-            justify=justify,
-            # _hover={"background": "green"},  # for debugging
+        rx.scroll_area(
+            rx.vstack(
+                *contents,
+                spacing="2",
+                width="100%",
+                height="100%",
+                align=align,
+                justify=justify,
+                # _hover={"background": "green"},  # for debugging
+            ),
         ),
         border_radius="0.5em",
         padding="1em",
@@ -48,122 +51,117 @@ def button_boxes() -> rx.Component:
     Returns:
         The button to add a task.
     """
-    return rx.flex(
-        rx.button(
-            rx.icon("message_circle"),
-            "ほめて！",
-            color_scheme="mint",
-            **styles.button_box_style,
-        ),
-        rx.button(
-            rx.icon("lightbulb"),
-            "それAIでどうにかならない？",
-            color_scheme="jade",
-            **styles.button_box_style,
-        ),
-        rx.button(
-            rx.icon("trash-2"),
-            "履歴をクリア",
-            color_scheme="tomato",
-            **styles.button_box_style,
-        ),
-        rx.dialog.root(
-            rx.dialog.trigger(
-                rx.button(
-                    rx.icon("plus"),
-                    "タスクを追加",
-                    color_scheme="iris",
-                    **styles.button_box_style,
-                ),
+    return rx.box(
+        rx.flex(
+            rx.button(
+                rx.icon("trash-2"),
+                "履歴をクリア",
+                color_scheme="tomato",
+                on_click=ChatState.reflesh,
+                **styles.button_box_style,
             ),
-            rx.dialog.content(
-                rx.form(
-                    rx.dialog.title("タスクを追加"),
-                    rx.flex(
-                        rx.hstack(
-                            rx.text("名前"),
-                            rx.text("【必須】", color_scheme="red"),
-                            spacing="2",
-                        ),
-                        rx.input(name="name"),
-                        rx.hstack(
-                            rx.text("優先度"),
-                            rx.text("【必須】", color_scheme="red"),
-                            spacing="2",
-                        ),
-                        rx.select(["低", "中", "高"], default_value="高", name="priority"),
-                        rx.hstack(
-                            rx.text("カテゴリ"),
-                            rx.text("【任意】", color_scheme="gray"),
-                            spacing="2",
-                        ),
-                        rx.input(name="category"),
-                        rx.hstack(
-                            rx.text("締切日時"),
-                            rx.text("【必須】", color_scheme="red"),
-                            spacing="2",
-                        ),
-                        rx.input(name="deadline", type="datetime-local"),
-                        rx.hstack(
-                            rx.text("所要時間"),
-                            rx.text("【必須】", color_scheme="red"),
-                            spacing="2",
-                        ),
-                        rx.hstack(
-                            rx.input(name="hour", default_value="1", width="8%"),
-                            rx.text("時間"),
-                            rx.input(name="minute", default_value="0", width="8%"),
-                            rx.text("分"),
-                        ),
-                        rx.hstack(
-                            rx.text("メモ"),
-                            rx.text("【任意】", color_scheme="gray"),
-                            spacing="2",
-                        ),
-                        rx.text_area(name="memo"),
-                        direction="column",
-                        spacing="3",
+            rx.dialog.root(
+                rx.dialog.trigger(
+                    rx.button(
+                        rx.icon("plus"),
+                        "タスクを追加",
+                        color_scheme="iris",
+                        **styles.button_box_style,
                     ),
-                    rx.flex(
-                        rx.dialog.close(
-                            rx.button(
-                                "キャンセル",
-                                color_scheme="gray",
-                                variant="soft",
+                ),
+                rx.dialog.content(
+                    rx.form(
+                        rx.dialog.title("タスクを追加"),
+                        rx.flex(
+                            rx.hstack(
+                                rx.text("名前"),
+                                rx.text("【必須】", color_scheme="red"),
+                                spacing="2",
                             ),
+                            rx.input(name="name"),
+                            rx.hstack(
+                                rx.text("優先度"),
+                                rx.text("【必須】", color_scheme="red"),
+                                spacing="2",
+                            ),
+                            rx.select(["低", "中", "高"], default_value="高", name="priority"),
+                            rx.hstack(
+                                rx.text("カテゴリ"),
+                                rx.text("【任意】", color_scheme="gray"),
+                                spacing="2",
+                            ),
+                            rx.input(name="category"),
+                            rx.hstack(
+                                rx.text("締切日時"),
+                                rx.text("【必須】", color_scheme="red"),
+                                spacing="2",
+                            ),
+                            rx.input(name="deadline", type="datetime-local"),
+                            rx.hstack(
+                                rx.text("所要時間"),
+                                rx.text("【必須】", color_scheme="red"),
+                                spacing="2",
+                            ),
+                            rx.hstack(
+                                rx.input(name="hour", default_value="1", width="8%"),
+                                rx.text("時間"),
+                                rx.input(name="minute", default_value="0", width="8%"),
+                                rx.text("分"),
+                            ),
+                            rx.hstack(
+                                rx.text("メモ"),
+                                rx.text("【任意】", color_scheme="gray"),
+                                spacing="2",
+                            ),
+                            rx.text_area(name="memo"),
+                            direction="column",
+                            spacing="3",
                         ),
-                        rx.dialog.close(
-                            rx.button("追加", type="submit"),
+                        rx.flex(
+                            rx.dialog.close(
+                                rx.button(
+                                    "キャンセル",
+                                    color_scheme="gray",
+                                    variant="soft",
+                                ),
+                            ),
+                            rx.dialog.close(
+                                rx.button("追加", type="submit"),
+                            ),
+                            spacing="3",
+                            margin_top="16px",
+                            justify="end",
                         ),
-                        spacing="3",
-                        margin_top="16px",
-                        justify="end",
+                        on_submit=TaskTableState.add_task_to_db,
                     ),
-                    on_submit=TaskTableState.add_task_to_db,
                 ),
             ),
+            direction="column",
+            width="100%",
+            height="15%",
+            justify="between",
+            align="stretch",
+            margin_top="1em",
+            spacing="3",
         ),
-        direction="column",
         width="100%",
         height="20%",
-        justify="between",
-        align="stretch",
-        margin_top="1em",
     )
 
 
 def left_box() -> rx.Component:
     return rx.box(
         rx.vstack(
-            content_field("100%", "40%", "center", "between", suggestion.suggestion()),
+            content_field("100%", "40%", "center", "between", decompose.decomposed_task_box()),
             content_field(
                 "100%",
                 "60%",
                 "stretch",
                 "between",
                 content_tab.content_tab(
-                    (my_calendar.calendar_view(), "カレンダー"),
+                    # (my_calendar.calendar_view(), "カレンダー"),
                     (task_table.task_table(), "タスク一覧"),
+                    (complete_task.task_table(), "完了タスク"),
                 ),
             ),
             justify="center",
@@ -180,13 +178,25 @@ def left_box() -> rx.Component:
 
 def right_box() -> rx.Component:
     return rx.flex(
+        rx.hstack(
+            rx.icon(tag="heart", size=40, color="red", padding_bottom="15px"),
+            rx.progress(
+                value=TaskTableState.fav,
+                width="90%",
+            ),
+            width="90%",
+            justify="center",
+            aline="center",
+        ),
         content_field(
             "100%",
-            "80%",
+            "100%",
             "start",
             "start",
-            icon_dialog.icon_dialog(("Hello", "Hi")),
-            icon_dialog.icon_dialog(("How are you?", "I'm fine.")),
+            rx.foreach(
+                ChatState.chat_history,
+                lambda dialog: icon_dialog.icon_dialog(dialog[0], dialog[1]),
+            ),
         ),
         button_boxes(),
         direction="column",

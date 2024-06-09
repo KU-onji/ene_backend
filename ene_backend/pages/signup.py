@@ -12,11 +12,13 @@ def signup_single_thirdparty() -> rx.Component:
         rx.card(
             rx.vstack(
                 rx.flex(
-                    rx.image(
-                        src="/task.jpg",
-                        width="2.5em",
-                        height="auto",
-                        border_radius="25%",
+                    rx.center(
+                        rx.image(
+                            src="/logo.png",
+                            width="5em",
+                            height="auto",
+                            border_radius="25%",
+                        ),
                     ),
                     rx.heading(
                         "アカウントを作成",
@@ -54,6 +56,26 @@ def signup_single_thirdparty() -> rx.Component:
                         placeholder="メールアドレス",
                         on_blur=AuthState.set_address,
                         type="email",
+                        size="3",
+                        width="100%",
+                    ),
+                    justify="start",
+                    spacing="2",
+                    width="100%",
+                ),
+                rx.vstack(
+                    rx.text(
+                        "ユーザー名",
+                        size="3",
+                        weight="medium",
+                        text_align="left",
+                        width="100%",
+                    ),
+                    rx.input(
+                        rx.input.slot(rx.icon("smile")),
+                        placeholder="ユーザー名",
+                        on_blur=AuthState.set_name,
+                        type="name",
                         size="3",
                         width="100%",
                     ),
@@ -101,14 +123,14 @@ def signup_single_thirdparty() -> rx.Component:
                     spacing="2",
                     width="100%",
                 ),
-                rx.box(
-                    rx.checkbox(
-                        "利用規約に同意しました",
-                        default_checked=True,
-                        spacing="2",
-                    ),
-                    width="100%",
-                ),
+                # rx.box(
+                #     rx.checkbox(
+                #         "利用規約に同意しました",
+                #         default_checked=True,
+                #         spacing="2",
+                #     ),
+                #     width="100%",
+                # ),
                 rx.button("新規登録", on_click=AuthState.signup, size="3", width="100%"),
                 rx.hstack(
                     rx.divider(margin="0"),
@@ -123,7 +145,7 @@ def signup_single_thirdparty() -> rx.Component:
                 ),
                 rx.button(
                     rx.image(
-                        src="/google.jpg",
+                        src="/google.svg",
                         width="1.5em",
                         height="auto",
                         border_radius="25%",

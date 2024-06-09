@@ -13,11 +13,13 @@ def login_single_thirdparty() -> rx.Component:
         rx.card(
             rx.vstack(
                 rx.flex(
-                    rx.image(
-                        src="/task.jpg",
-                        width="2.5em",
-                        height="auto",
-                        border_radius="25%",
+                    rx.center(
+                        rx.image(
+                            src="/logo.png",
+                            width="5em",
+                            height="auto",
+                            border_radius="25%",
+                        ),
                     ),
                     rx.heading(
                         "ログイン",
@@ -102,7 +104,7 @@ def login_single_thirdparty() -> rx.Component:
                 ),
                 rx.button(
                     rx.image(
-                        src="/google.jpg",
+                        src="/google.svg",
                         width="1.5em",
                         height="auto",
                         border_radius="25%",

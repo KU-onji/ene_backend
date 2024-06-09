@@ -1,14 +1,34 @@
+from typing import Optional
+
 import reflex as rx
 from sqlmodel import select
 
-from ene_backend.templates.template import ThemeState, User
+from ..db_model import User
+
+
+class ThemeState(rx.State):
+    """The state for the theme of the app."""
+
+    accent_color: str = "crimson"
+
+    gray_color: str = "gray"
+    user: Optional[User] = None
+
+    def check_login(self):
+        if not self.logged_in:
+            return rx.redirect("/")
+
+    @rx.var
+    def logged_in(self):
+        return self.user is not None
 
 
 class AuthState(ThemeState):
     address: str
     password: str
     confirm_password: str
-    name: str | None
+    name: str
+    user_id: str
 
     def signup(self):
         with rx.session() as session:
@@ -16,17 +36,18 @@ class AuthState(ThemeState):
                 return rx.window_alert("確認用のパスワードが一致しません")
             if session.exec(select(User).where(User.address == self.address)).first():
                 return rx.window_alert("すでに登録されているメールアドレスです")
-            self.user = User(address=self.address, password=self.password)
+            self.user = User(address=self.address, password=self.password, name=self.name)
             session.add(self.user)
             session.expire_on_commit = False
             session.commit()
-            return rx.redirect("/")
+            return rx.redirect("/home")
 
     def login(self):
         with rx.session() as session:
             user = session.exec(select(User).where(User.address == self.address)).first()
             if user and user.password == self.password:
                 self.user = user
+                self.user_id = user.id
                 return rx.redirect("/home")
             else:
                 return rx.window_alert("ユーザー名またはパスワードが正しくありません。")
@@ -44,5 +65,6 @@ class AuthState(ThemeState):
                     user.name = self.name
                 session.expire_on_commit = False
                 session.commit()
+                return rx.redirect("/home")
             else:
                 return rx.window_alert("パスワードが正しくありません。")

@@ -14,6 +14,6 @@ def content_tab(*content_and_name: tuple[rx.Component, str]) -> rx.Component:
             for content, name in zip(contents, names)
         ],
         default_value=f"tab_{names[0]}",
-        # height="100%",
+        height="100%",
         flex_grow="1",
     )
