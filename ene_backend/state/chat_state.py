@@ -18,7 +18,7 @@ class ChatState(TaskTableState):
         self.chat_history = []
 
     def answer(self, task: Task) -> None:
-        self.question = f"{task["name"]}が終わった！褒めて！"
+        self.question = f"「{task["name"]}」が終わったよ！褒めて！"
         self.complete_task(task)
         self.response = self.get_response(task)
         self.chat_history.append((self.question, self.response))

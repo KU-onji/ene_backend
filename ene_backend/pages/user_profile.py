@@ -51,7 +51,7 @@ def profile() -> rx.Component:
                     rx.input(
                         placeholder="パスワード", on_blur=AuthState.set_password, name="password", type="password"
                     ),
-                    rx.button("Change profile", width="10em", type="submit"),
+                    rx.button("適用", width="10em", type="submit"),
                 ),
                 on_submit=AuthState.update_profile,
                 reset_on_submit=True,

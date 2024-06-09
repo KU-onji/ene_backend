@@ -166,7 +166,7 @@ def decomposed_task_box() -> rx.Component:
                                     width="100%",
                                     on_change=DecomposeTaskState.set_selected_task,
                                 ),
-                                rx.button("Decompose", on_click=DecomposeTaskState.reflect_selected_task),
+                                rx.button("分解", on_click=DecomposeTaskState.reflect_selected_task),
                             ),
                         ),
                     )
