@@ -3,7 +3,6 @@ from typing import Literal
 import reflex as rx
 
 from ene_backend import styles
-
 from ene_backend.components import (
     complete_task,
     content_tab,
@@ -54,12 +53,6 @@ def button_boxes() -> rx.Component:
         The button to add a task.
     """
     return rx.flex(
-        rx.button(
-            rx.icon("message_circle"),
-            "ほめて！",
-            color_scheme="mint",
-            **styles.button_box_style,
-        ),
         rx.dialog.root(
             rx.dialog.trigger(
                 rx.button(

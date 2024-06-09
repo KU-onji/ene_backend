@@ -3,11 +3,14 @@ import reflex as rx
 from ene_backend import styles
 
 from ..state.task_state import TaskTableState
+from ..utils.gpt_utils import call_gpt, create_Client, create_partition_prompt
 
 
 class DecomposeTaskState(rx.State):
     original_task: str = "AIで分解"
     selected_task: str = ""
+    previous_task: str = "AIで分解"
+    decomposed_task_list: list[str] = []
 
     def change_original_task(self, original_task: str):
         self.original_task = original_task
@@ -21,19 +24,21 @@ class DecomposeTaskState(rx.State):
     @rx.var
     def decomposed_tasks(self) -> list[str]:
         def decomposed_task_list(task_name: str) -> list[str]:
-            return (
-                []
-                if task_name == "AIで分解"
-                else [
-                    "new " + task_name,
-                    "further " + task_name,
-                    "supreme " + task_name,
-                    "Sikanoko " + task_name,
-                    "Final " + task_name,
-                ]
-            )
+            client = create_Client()
+            gpt_results = call_gpt(client, create_partition_prompt(task_name))
+            # gpt_results = "(new task:1 hour),(new task2:30 min)"
+            decomposed_list = gpt_results.split(",")
+            task_name_list = []
+            for task in decomposed_list:
+                task_name, _ = task.split(":")
+                task_name_list.append(task_name[1:])
+            return task_name_list
 
-        return decomposed_task_list(self.original_task)
+        if self.previous_task != self.original_task:
+            self.previous_task = self.original_task
+            self.decomposed_task_list = decomposed_task_list(self.original_task)
+
+        return self.decomposed_task_list
 
     @rx.var
     def too_long_task_name(self) -> bool:
@@ -41,14 +46,85 @@ class DecomposeTaskState(rx.State):
 
 
 def task_box(task_name: str) -> rx.Component:
-    return rx.box(
-        rx.text(task_name, text_align="center"),
-        background=rx.color("iris"),
-        width="100%",
-        padding_y="1em",
-        justify="between",
-        align="start",
-        border_radius=styles.border_radius,
+    return rx.dialog.root(
+        rx.dialog.trigger(
+            rx.button(
+                rx.text(task_name, text_align="center"),
+                background=rx.color("iris"),
+                height="100%",
+                width="100%",
+                padding_y="1em",
+                justify="between",
+                align="start",
+                border_radius=styles.border_radius,
+            )
+        ),
+        rx.dialog.content(
+            rx.form(
+                rx.dialog.title("タスクを追加"),
+                rx.flex(
+                    rx.hstack(
+                        rx.text("名前"),
+                        rx.text("【必須】", color_scheme="red"),
+                        spacing="2",
+                    ),
+                    rx.input(name="name", default_value=task_name),
+                    rx.hstack(
+                        rx.text("優先度"),
+                        rx.text("【必須】", color_scheme="red"),
+                        spacing="2",
+                    ),
+                    rx.select(["低", "中", "高"], default_value="高", name="priority"),
+                    rx.hstack(
+                        rx.text("カテゴリ"),
+                        rx.text("【任意】", color_scheme="gray"),
+                        spacing="2",
+                    ),
+                    rx.input(name="category"),
+                    rx.hstack(
+                        rx.text("締切日時"),
+                        rx.text("【必須】", color_scheme="red"),
+                        spacing="2",
+                    ),
+                    rx.input(name="deadline", type="datetime-local"),
+                    rx.hstack(
+                        rx.text("所要時間"),
+                        rx.text("【必須】", color_scheme="red"),
+                        spacing="2",
+                    ),
+                    rx.hstack(
+                        rx.input(name="hour", default_value="1", width="8%"),
+                        rx.text("時間"),
+                        rx.input(name="minute", default_value="0", width="8%"),
+                        rx.text("分"),
+                    ),
+                    rx.hstack(
+                        rx.text("メモ"),
+                        rx.text("【任意】", color_scheme="gray"),
+                        spacing="2",
+                    ),
+                    rx.text_area(name="memo"),
+                    direction="column",
+                    spacing="3",
+                ),
+                rx.flex(
+                    rx.dialog.close(
+                        rx.button(
+                            "キャンセル",
+                            color_scheme="gray",
+                            variant="soft",
+                        ),
+                    ),
+                    rx.dialog.close(
+                        rx.button("追加", type="submit"),
+                    ),
+                    spacing="3",
+                    margin_top="16px",
+                    justify="end",
+                ),
+                on_submit=TaskTableState.add_task_to_db,
+            ),
+        ),
     )
 
 
