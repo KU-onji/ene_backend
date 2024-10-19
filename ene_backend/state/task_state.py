@@ -47,7 +47,10 @@ class TaskTableState(AuthState):
     def complete_task(self, task: Task):
         with rx.session() as session:
             delete_task = session.exec(select(Task).where(Task.id == task["id"])).first()
-            session.delete(delete_task)
+            if delete_task is not None:
+                session.delete(delete_task)
+            else: 
+                raise RuntimeError("The instance is already deleted from database.")
             session.commit()
         self.load_entries()
 
