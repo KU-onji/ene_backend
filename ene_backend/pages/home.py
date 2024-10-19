@@ -185,12 +185,13 @@ def right_box() -> rx.Component:
                 width="90%",
             ),
             width="90%",
+            height="10%",
             justify="center",
             aline="center",
         ),
         content_field(
             "100%",
-            "100%",
+            "75%",
             "start",
             "start",
             rx.foreach(
