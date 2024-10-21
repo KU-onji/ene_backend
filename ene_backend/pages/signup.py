@@ -1,9 +1,15 @@
 """The Login Page"""
 
+import os
+
 import reflex as rx
 
 from ene_backend.state.auth import AuthState
 from ene_backend.templates import template
+
+from ..react_oauth_google import GoogleLogin, GoogleOAuthProvider
+
+CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 
 @template(route="/signup", title="サインアップ")
@@ -143,17 +149,15 @@ def signup_single_thirdparty() -> rx.Component:
                     align="center",
                     width="100%",
                 ),
-                rx.button(
-                    rx.image(
-                        src="/google.svg",
-                        width="1.5em",
-                        height="auto",
-                        border_radius="25%",
+                rx.vstack(
+                    rx.center(
+                        GoogleOAuthProvider.create(
+                            GoogleLogin.create(on_success=AuthState.on_success_signup),
+                            client_id=CLIENT_ID,
+                        ),
                     ),
-                    "Googleで新規登録",
-                    variant="outline",
-                    size="3",
                     width="100%",
+                    align="center",
                 ),
                 spacing="6",
                 width="100%",
