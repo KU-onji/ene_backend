@@ -63,7 +63,7 @@ def signup_single_thirdparty() -> rx.Component:
                                 rx.input.slot(rx.icon("mail")),
                                 placeholder="メールアドレス",
                                 name="address",
-                                # type="email",
+                                type="email",
                                 size="3",
                                 width="100%",
                             ),

@@ -13,6 +13,7 @@ from sqlmodel import select
 from ..db_model import User
 
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+TOKEN_CLOCK_SKEW = 60
 
 
 class ThemeState(rx.State):
@@ -40,6 +41,7 @@ class ThemeState(rx.State):
                 json.loads(self.id_token_json)["credential"],
                 requests.Request(),
                 CLIENT_ID,
+                clock_skew_in_seconds=TOKEN_CLOCK_SKEW,
             )
             if id_info["aud"] != CLIENT_ID:
                 raise ValueError("Invalid audience.")
@@ -50,11 +52,12 @@ class ThemeState(rx.State):
 
     @rx.var
     def token_is_valid(self) -> bool:
+        print(self.tokeninfo)
         try:
-            if self.tokeninfo and int(self.tokeninfo.get("exp", 0)) > time.time():
-                return True
-            else:
-                return False
+            exp = int(self.tokeninfo.get("exp", 0))
+            nbf = int(self.tokeninfo.get("nbf", 0))
+            current_time = time.time()
+            return self.tokeninfo and (nbf - TOKEN_CLOCK_SKEW <= current_time < exp + TOKEN_CLOCK_SKEW)
         except Exception:
             return False
 
@@ -70,6 +73,15 @@ class AuthState(ThemeState):
     name: str
     user_id: str
 
+    def reset_attributes(self):
+        self.address = ""
+        self.password = ""
+        self.confirm_password = ""
+        self.name = ""
+        self.user_id = ""
+        self.user = None
+        self.id_token_json = ""
+
     def signup_submit(self, form_data: dict):
         self.address = form_data["address"]
         self.password = form_data["password"]
@@ -83,18 +95,19 @@ class AuthState(ThemeState):
         return self.login()
 
     def is_valid_email(self, email: str) -> bool:
-        return bool(re.match(r"[^@]+@[^@]+\.[^@]+", email))
+        pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        return bool(re.fullmatch(pattern, email))
 
     def signup(self):
         with rx.session() as session:
             if not self.is_valid_email(self.address):
-                self.reset()
+                self.reset_attributes()
                 return rx.window_alert("メールアドレスの形式が正しくありません")
             if self.password != self.confirm_password:
-                self.reset()
+                self.reset_attributes()
                 return rx.window_alert("確認用のパスワードが一致しません")
             if session.exec(select(User).where(User.address == self.address)).first():
-                self.reset()
+                self.reset_attributes()
                 return rx.window_alert("このメールアドレスは利用できません")
             self.user = User(
                 address=self.address,
@@ -115,11 +128,11 @@ class AuthState(ThemeState):
                 self.name = user.name
                 return rx.redirect("/home")
             else:
-                self.reset()
+                self.reset_attributes()
                 return rx.window_alert("メールアドレスまたはパスワードが正しくありません。")
 
     def logout(self):
-        self.reset()
+        self.reset_attributes()
         return rx.redirect("/")
 
     # update user profile
