@@ -42,16 +42,9 @@ def profile() -> rx.Component:
                     rx.input(
                         placeholder="新しいニックネーム",
                         name="name",
-                        default_value=AuthState.name,
-                    ),
-                    rx.text(
-                        "パスワードを入力",
-                        size="5",
-                    ),
-                    rx.input(
-                        placeholder="パスワード", on_blur=AuthState.set_password, name="password", type="password"
                     ),
                     rx.button("適用", width="10em", type="submit"),
+                    rx.button("キャンセル", width="10em", variant="soft", on_click=rx.redirect("/home")),
                 ),
                 on_submit=AuthState.update_profile,
                 reset_on_submit=True,
