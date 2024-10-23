@@ -52,7 +52,6 @@ class ThemeState(rx.State):
 
     @rx.var
     def token_is_valid(self) -> bool:
-        print(self.tokeninfo)
         try:
             exp = int(self.tokeninfo.get("exp", 0))
             nbf = int(self.tokeninfo.get("nbf", 0))
