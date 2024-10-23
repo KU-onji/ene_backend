@@ -12,7 +12,7 @@ from ..react_oauth_google import GoogleLogin, GoogleOAuthProvider
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 
-@template(route="/signup", title="サインアップ")
+@template(route="/signup", title="サインアップ", navi=False)
 def signup_single_thirdparty() -> rx.Component:
     return rx.center(
         rx.card(

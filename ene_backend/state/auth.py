@@ -104,6 +104,8 @@ class AuthState(ThemeState):
             session.add(self.user)
             session.expire_on_commit = False
             session.commit()
+            user = session.exec(select(User).where(User.address == self.address)).first()
+            self.user_id = user.id
             return rx.redirect("/home")
 
     def login(self):
@@ -127,8 +129,13 @@ class AuthState(ThemeState):
         with rx.session() as session:
             user = session.exec(select(User).where(User.address == self.address)).first()
             if profile["address"] != "":
-                self.address = profile["address"]
-                user.address = self.address
+                if not self.is_valid_email(profile["address"]):
+                    return rx.window_alert("メールアドレスの形式が正しくありません")
+                if session.exec(select(User).where(User.address == profile["address"])).first():
+                    if self.address != profile["address"]:
+                        return rx.window_alert("このメールアドレスは利用できません")
+                    self.address = profile["address"]
+                    user.address = self.address
             if profile["name"] != "":
                 self.name = profile["name"]
                 user.name = self.name

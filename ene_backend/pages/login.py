@@ -13,7 +13,7 @@ from ..react_oauth_google import GoogleLogin, GoogleOAuthProvider
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 
-@template(route="/", title="ログイン", on_load=CurrentTimeState.update_time())
+@template(route="/", title="ログイン", navi=False, on_load=CurrentTimeState.update_time())
 def login_single_thirdparty() -> rx.Component:
     return rx.center(
         rx.card(
