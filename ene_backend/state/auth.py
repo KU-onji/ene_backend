@@ -70,17 +70,17 @@ class AuthState(ThemeState):
     name: str
     user_id: str
 
-    def set_address(self, address: str):
-        self.address = address
+    def signup_submit(self, form_data: dict):
+        self.address = form_data["address"]
+        self.password = form_data["password"]
+        self.confirm_password = form_data["confirm_password"]
+        self.name = form_data["name"]
+        return self.signup()
 
-    def set_name(self, name: str):
-        self.name = name
-
-    def set_password(self, password: str):
-        self.password = password
-
-    def set_confirm_password(self, confirm_password: str):
-        self.confirm_password = confirm_password
+    def login_submit(self, form_data: dict):
+        self.address = form_data["address"]
+        self.password = form_data["password"]
+        return self.login()
 
     def is_valid_email(self, email: str) -> bool:
         return bool(re.match(r"[^@]+@[^@]+\.[^@]+", email))
