@@ -70,6 +70,7 @@ def template(
     title: str | None = None,
     description: str | None = None,
     meta: str | None = None,
+    navi: bool = True,
     script_tags: list[rx.Component] | None = None,
     on_load: rx.event.EventHandler | list[rx.event.EventHandler] | None = None,
 ) -> Callable[[Callable[[], rx.Component]], rx.Component]:
@@ -120,6 +121,26 @@ def template(
                 height="100vh",
             )
 
+        def no_navi_page():
+            return rx.vstack(
+                rx.box(
+                    rx.vstack(
+                        page_content(),
+                        width="100%",
+                        height="100%",
+                        **styles.template_content_style,
+                    ),
+                    width="100%",
+                    height="calc(100vh - 7em)",
+                    **styles.template_page_style,
+                ),
+                # menu_button(),
+                background=f"radial-gradient(circle at top right, {rx.color('accent', 2)}, {rx.color('mauve', 1)});",
+                position="relative",
+                width="100%",
+                height="100vh",
+            )
+
         @rx.page(
             route=route,
             title=title,
@@ -129,12 +150,20 @@ def template(
             on_load=on_load,
         )
         def theme_wrap():
-            return rx.theme(
-                templated_page(),
-                has_background=True,
-                accent_color=ThemeState.accent_color,
-                gray_color=ThemeState.gray_color,
-            )
+            if navi:
+                return rx.theme(
+                    templated_page(),
+                    has_background=True,
+                    accent_color=ThemeState.accent_color,
+                    gray_color=ThemeState.gray_color,
+                )
+            else:
+                return rx.theme(
+                    no_navi_page(),
+                    has_background=True,
+                    accent_color=ThemeState.accent_color,
+                    gray_color=ThemeState.gray_color,
+                )
 
         return theme_wrap
 
