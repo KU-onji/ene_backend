@@ -24,11 +24,13 @@ class ThemeState(rx.State):
     gray_color: str = "gray"
     user: Optional[User] = None
     id_token_json: str = rx.LocalStorage()
+    login_w_ggl: bool = False
 
     def check_login(self):
         if not self.logged_in:
             self.id_token_json = ""
             self.user = None
+            self.login_w_ggl = False
             return rx.redirect("/")
 
     @rx.var(cache=True)
@@ -62,7 +64,7 @@ class ThemeState(rx.State):
 
     @rx.var
     def logged_in(self):
-        return self.user is not None or self.token_is_valid
+        return self.user and (not self.login_w_ggl or self.token_is_valid)
 
 
 class AuthState(ThemeState):
@@ -80,6 +82,7 @@ class AuthState(ThemeState):
         self.user_id = ""
         self.user = None
         self.id_token_json = ""
+        self.login_w_ggl = False
 
     def signup_submit(self, form_data: dict):
         self.address = form_data["address"]
@@ -153,6 +156,7 @@ class AuthState(ThemeState):
         self.address = self.tokeninfo["email"]
         self.name = self.tokeninfo["name"]
         self.password = self.tokeninfo["sub"]
+        self.login_w_ggl = True
         return self.login()
 
     def on_success_signup(self, id_token: dict):
