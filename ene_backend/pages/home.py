@@ -35,6 +35,7 @@ def content_field(
                 justify=justify,
                 # _hover={"background": "green"},  # for debugging
             ),
+            width="100%",
         ),
         border_radius="0.5em",
         padding="1em",

@@ -44,7 +44,7 @@ def icon_dialog(user_message: str, system_response: str) -> rx.Component:
                 # _hover={"transform": "scale(1.1)"},
             ),
         ),
-        width="inherit",
+        width="40em",
         padding_x="1em",
         justify="between",
         align="stretch",
