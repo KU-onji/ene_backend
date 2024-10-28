@@ -49,7 +49,7 @@ class TaskTableState(AuthState):
             delete_task = session.exec(select(Task).where(Task.id == task["id"])).first()
             if delete_task is not None:
                 session.delete(delete_task)
-            else: 
+            else:
                 raise RuntimeError("The instance is already deleted from database.")
             session.commit()
         self.load_entries()
@@ -85,6 +85,8 @@ class TaskTableState(AuthState):
     def update_task(self, input_dict: dict):
         if input_alert(input_dict):
             return rx.window_alert("必要な項目が入力されていません")
+        if datetime.fromisoformat(input_dict["deadline"]) < datetime.now():
+            return rx.window_alert("締切日時は現在時刻より後の日時を指定してください")
         deadline = input_dict["deadline"]
         deadline = deadline.replace("-", "/").replace("T", " ")
         input_dict["deadline_convert"] = deadline
@@ -111,6 +113,8 @@ class TaskTableState(AuthState):
     def add_task_to_db(self, input_dict: dict):
         if input_alert(input_dict):
             return rx.window_alert("必要な項目が入力されていません")
+        if datetime.fromisoformat(input_dict["deadline"]) < datetime.now():
+            return rx.window_alert("締切日時は現在時刻より後の日時を指定してください")
         deadline = input_dict["deadline"]
         deadline = deadline.replace("-", "/").replace("T", " ")
         input_dict["deadline_convert"] = deadline
