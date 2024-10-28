@@ -93,6 +93,7 @@ class TaskTableState(AuthState):
         if not validate_time(input_dict["hour"], input_dict["minute"]):
             return rx.window_alert("所要時間の形式が正しくありません")
         input_dict["user_id"] = self.user_id
+        input_dict["color"] = "black"
         self.current_task.update(input_dict)
         with rx.session() as session:
             task = session.exec(select(Task).where(Task.id == self.current_task["id"])).first()
@@ -121,6 +122,7 @@ class TaskTableState(AuthState):
         if not validate_time(input_dict["hour"], input_dict["minute"]):
             return rx.window_alert("所要時間の形式が正しくありません")
         input_dict["user_id"] = self.user_id
+        input_dict["color"] = "black"
         self.current_task = input_dict
         with rx.session() as session:
             session.add(Task(**self.current_task))
@@ -138,7 +140,9 @@ class TaskTableState(AuthState):
     def load_entries(self) -> list[Task]:
         """Get all users from the database."""
         with rx.session() as session:
+            session.expire_on_commit = False
             query = select(Task).where(Task.user_id == self.user_id)
+
             if self.search_value != "":
                 search_value = f"%{self.search_value.lower()}%"
                 query = query.where(
@@ -156,6 +160,16 @@ class TaskTableState(AuthState):
                     query = query.order_by(Task.deadline)
 
             self.tasks = session.exec(query).all()
+
+            for task in self.tasks:
+                if datetime.now() > datetime.fromisoformat(task.deadline):
+                    task.color = "red"
+                    session.add(task)  # 変更をマーク
+                    session.commit()
+                elif datetime.now() + timedelta(days=1) > datetime.fromisoformat(task.deadline):
+                    task.color = "orange"
+                    session.add(task)
+                    session.commit()
         self.comp_load_entries()
 
     @rx.var

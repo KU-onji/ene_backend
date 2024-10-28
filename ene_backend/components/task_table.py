@@ -1,21 +1,8 @@
-from datetime import datetime, timedelta
-
 import reflex as rx
 
 from ..db_model import Task
 from ..state.chat_state import ChatState
 from ..state.task_state import TaskTableState
-
-
-def change_color(task: Task) -> str:
-    """Determine the color based on the deadline."""
-    deadline_time = datetime.strptime(task.deadline, "%Y-%m-%d %H:%M")
-    if datetime.now() > deadline_time:
-        return "red"
-    elif deadline_time < datetime.now() + timedelta(days=1):
-        return "yellow"
-    else:
-        return "black"
 
 
 def show_task(task: Task):
@@ -30,7 +17,7 @@ def show_task(task: Task):
         rx.table.cell(task.name),
         rx.table.cell(task.priority),
         rx.table.cell(task.category),
-        rx.table.cell(task.deadline_convert),
+        rx.table.cell(task.deadline_convert, color=task.color),
         rx.table.cell(
             rx.dialog.root(
                 rx.dialog.trigger(

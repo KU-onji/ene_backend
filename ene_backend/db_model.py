@@ -19,6 +19,7 @@ class Task(rx.Model, table=True):
     hour: str
     minute: str
     memo: str
+    color: str
 
 
 class CompleteTask(rx.Model, table=True):
