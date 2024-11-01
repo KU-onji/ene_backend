@@ -60,11 +60,6 @@ def login_single_thirdparty() -> rx.Component:
                             size="3",
                             weight="medium",
                         ),
-                        rx.link(
-                            "パスワードを忘れた場合",
-                            href="#",
-                            size="3",
-                        ),
                         justify="between",
                         width="100%",
                     ),
