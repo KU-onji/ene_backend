@@ -143,6 +143,8 @@ class AuthState(ThemeState):
         with rx.session() as session:
             user = session.exec(select(User).where(User.address == self.address)).first()
             if "address" in profile and profile["address"] != "":
+                if not self.is_valid_email(profile["address"]):
+                    return rx.window_alert("メールアドレスの形式が正しくありません")
                 self.address = profile["address"]
                 user.address = self.address
             if profile["name"] != "":
