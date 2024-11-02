@@ -1,69 +1,44 @@
-# Welcome to Reflex!
+# ene!
+![Logo](assets/logo.png)
 
-This is the base Reflex template - installed when you run `reflex init`.
+## コンセプト
+- タスク管理アプリを使っても面倒なものは面倒...
+- 人間は「褒められ」がないと働かない...
 
-If you want to use a different template, pass the `--template` flag to `reflex init`.
-For example, if you want a more basic starting point, you can run:
+### **タスクをこなしてAIに褒めてもらいたい！**
 
+- タスクを完了すると美少女AIが**褒めてくれます**。
+- タスクをこなせばこなすほどAIの**好感度**が上がっていき、より**親密な誉め言葉**を受け取れます。
+- たくさん褒められることで、どんどん**やる気UP**！
+- AIがタスクの**細分化**もサポートします。
+
+## 機能一覧
+- ✅**タスクの管理**：タスクの作成、編集、削除が簡単に行えます。
+- 👍**AIからの誉め言葉**：タスク完了時に美少女AIが褒めてくれます。
+- 💕**好感度システム**：タスクをこなすごとにAIの好感度が上がり、より親密な誉め言葉になります。
+- 🛠️**タスクの細分化**：AIが大きなタスクを小さなステップに分解します。
+
+## 実行方法
+### ステップ1：環境のセットアップ
+仮想環境を作成し、必要な依存関係をインストールします。
 ```bash
-reflex init --template blank
+poetry install
+poetry shell
 ```
 
-## About this Template
-
-This template has the following directory structure:
-
+### ステップ２：データベースの初期化
+データベースを設定し、マイグレーションを適用します。
 ```bash
-├── README.md
-├── assets
-├── rxconfig.py
-└── {your_app}
-    ├── __init__.py
-    ├── components
-    │   ├── __init__.py
-    │   └── sidebar.py
-    ├── pages
-    │   ├── __init__.py
-    │   ├── dashboard.py
-    │   ├── index.py
-    │   └── settings.py
-    ├── styles.py
-    ├── templates
-    │   ├── __init__.py
-    │   └── template.py
-    └── {your_app}.py
+reflex db init
+reflex db makemigrations
+reflex db migrate
 ```
 
-See the [Project Structure docs](https://reflex.dev/docs/getting-started/project-structure/) for more information on general Reflex project structure.
+### ステップ３：アプリケーションの起動
+アプリケーションをローカルサーバーで起動します。
+```bash
+reflex run
+```
 
-### Adding Pages
-
-In this template, the pages in your app are defined in `{your_app}/pages/`.
-Each page is a function that returns a Reflex component.
-For example, to edit this page you can modify `{your_app}/pages/index.py`.
-See the [pages docs](https://reflex.dev/docs/pages/routes/) for more information on pages.
-
-In this template, instead of using `rx.add_page` or the `@rx.page` decorator,
-we use the `@template` decorator from `{your_app}/templates/template.py`.
-
-To add a new page:
-
-1. Add a new file in `{your_app}/pages/`. We recommend using one file per page, but you can also group pages in a single file.
-2. Add a new function with the `@template` decorator, which takes the same arguments as `@rx.page`.
-3. Import the page in your `{your_app}/pages/__init__.py` file and it will automatically be added to the app.
-
-
-### Adding Components
-
-In order to keep your code organized, we recommend putting components that are
-used across multiple pages in the `{your_app}/components/` directory.
-
-In this template, we have a sidebar component in `{your_app}/components/sidebar.py`.
-
-### Adding State
-
-As your app grows, we recommend using [substates](https://reflex.dev/docs/substates/overview/)
-to organize your state.
-
-You can either define substates in their own files, or if the state is
-specific to a page, you can define it in the page file itself.
+## 注意
+実行にはOpenAI APIキーおよびGoogle APIキーを環境変数に設定する必要があります。
