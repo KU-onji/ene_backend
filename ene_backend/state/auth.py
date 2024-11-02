@@ -1,9 +1,19 @@
+import json
+import os
+import re
+import time
 from typing import Optional
 
+import bcrypt
 import reflex as rx
+from google.auth.transport import requests
+from google.oauth2.id_token import verify_oauth2_token
 from sqlmodel import select
 
 from ..db_model import User
+
+CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+TOKEN_CLOCK_SKEW = 60
 
 
 class ThemeState(rx.State):
@@ -13,14 +23,48 @@ class ThemeState(rx.State):
 
     gray_color: str = "gray"
     user: Optional[User] = None
+    id_token_json: str = rx.LocalStorage()
+    login_w_ggl: bool = False
 
     def check_login(self):
         if not self.logged_in:
+            self.id_token_json = ""
+            self.user = None
+            self.login_w_ggl = False
             return rx.redirect("/")
+
+    @rx.var(cache=True)
+    def tokeninfo(self) -> dict[str, str]:
+        if not self.id_token_json:
+            return {}
+
+        try:
+            id_info = verify_oauth2_token(
+                json.loads(self.id_token_json)["credential"],
+                requests.Request(),
+                CLIENT_ID,
+                clock_skew_in_seconds=TOKEN_CLOCK_SKEW,
+            )
+            if id_info["aud"] != CLIENT_ID:
+                raise ValueError("Invalid audience.")
+            return id_info
+        except ValueError as exc:
+            print(f"Error verifying token: {exc}")
+        return {}
+
+    @rx.var
+    def token_is_valid(self) -> bool:
+        try:
+            exp = int(self.tokeninfo.get("exp", 0))
+            nbf = int(self.tokeninfo.get("nbf", 0))
+            current_time = time.time()
+            return self.tokeninfo and (nbf - TOKEN_CLOCK_SKEW <= current_time < exp + TOKEN_CLOCK_SKEW)
+        except Exception:
+            return False
 
     @rx.var
     def logged_in(self):
-        return self.user is not None
+        return self.user and (not self.login_w_ggl or self.token_is_valid)
 
 
 class AuthState(ThemeState):
@@ -30,13 +74,49 @@ class AuthState(ThemeState):
     name: str
     user_id: str
 
+    def reset_attributes(self):
+        self.address = ""
+        self.password = ""
+        self.confirm_password = ""
+        self.name = ""
+        self.user_id = ""
+        self.user = None
+        self.id_token_json = ""
+        self.login_w_ggl = False
+
+    def signup_submit(self, form_data: dict):
+        self.address = form_data["address"]
+        self.password = form_data["password"]
+        self.confirm_password = form_data["confirm_password"]
+        self.name = form_data["name"]
+        return self.signup()
+
+    def login_submit(self, form_data: dict):
+        self.address = form_data["address"]
+        self.password = form_data["password"]
+        return self.login()
+
+    def is_valid_email(self, email: str) -> bool:
+        pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        return bool(re.fullmatch(pattern, email))
+
     def signup(self):
         with rx.session() as session:
+            if not self.is_valid_email(self.address):
+                self.reset_attributes()
+                return rx.window_alert("メールアドレスの形式が正しくありません")
             if self.password != self.confirm_password:
+                self.reset_attributes()
                 return rx.window_alert("確認用のパスワードが一致しません")
             if session.exec(select(User).where(User.address == self.address)).first():
-                return rx.window_alert("すでに登録されているメールアドレスです")
-            self.user = User(address=self.address, password=self.password, name=self.name)
+                self.reset_attributes()
+                return rx.window_alert("このメールアドレスは利用できません")
+            self.user = User(
+                address=self.address,
+                password=bcrypt.hashpw(self.password.encode("utf-8"), bcrypt.gensalt()),
+                name=self.name,
+                google=self.login_w_ggl,
+            )
             session.add(self.user)
             session.expire_on_commit = False
             session.commit()
@@ -45,26 +125,48 @@ class AuthState(ThemeState):
     def login(self):
         with rx.session() as session:
             user = session.exec(select(User).where(User.address == self.address)).first()
-            if user and user.password == self.password:
+            if user and bcrypt.checkpw(self.password.encode("utf-8"), user.password.encode("utf-8")):
                 self.user = user
                 self.user_id = user.id
+                self.name = user.name
                 return rx.redirect("/home")
             else:
-                return rx.window_alert("ユーザー名またはパスワードが正しくありません。")
+                self.reset_attributes()
+                return rx.window_alert("メールアドレスまたはパスワードが正しくありません。")
+
+    def logout(self):
+        self.reset_attributes()
+        return rx.redirect("/")
 
     # update user profile
     def update_profile(self, profile: dict):
         with rx.session() as session:
             user = session.exec(select(User).where(User.address == self.address)).first()
-            if user and user.password == profile["password"]:
-                if profile["address"] != "":
-                    self.address = profile["address"]
-                    user.address = self.address
-                if profile["name"] != "":
-                    self.name = profile["name"]
-                    user.name = self.name
-                session.expire_on_commit = False
-                session.commit()
-                return rx.redirect("/home")
-            else:
-                return rx.window_alert("パスワードが正しくありません。")
+            if "address" in profile and profile["address"] != "":
+                if not self.is_valid_email(profile["address"]):
+                    return rx.window_alert("メールアドレスの形式が正しくありません")
+                self.address = profile["address"]
+                user.address = self.address
+            if profile["name"] != "":
+                self.name = profile["name"]
+                user.name = self.name
+            session.expire_on_commit = False
+            session.commit()
+            return rx.redirect("/home")
+
+    def on_success_login(self, id_token: dict):
+        self.id_token_json = json.dumps(id_token)
+        self.address = self.tokeninfo["email"]
+        self.name = self.tokeninfo["name"]
+        self.password = self.tokeninfo["sub"]
+        self.login_w_ggl = True
+        return self.login()
+
+    def on_success_signup(self, id_token: dict):
+        self.id_token_json = json.dumps(id_token)
+        self.address = self.tokeninfo["email"]
+        self.name = self.tokeninfo["name"]
+        self.password = self.tokeninfo["sub"]
+        self.confirm_password = self.tokeninfo["sub"]
+        self.login_w_ggl = True
+        return self.signup()

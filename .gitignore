@@ -1,15 +1,18 @@
-# files to ignore
-/.venv/
-**/__pycache__/**
-.python-version
-/.web/
-reflex.db
-alembic.ini
-/alembic/
-
-# except for these
 !.gitignore
-!/src/*.py
-!README.md
 !.pre-commit-config.yaml
 !/assets/**
+!/src/*.py
+!README.md
+# except for these
+# files to ignore
+**/__pycache__/**
+*.db
+*.py[cod]
+.python-version
+.web
+/.venv/
+/.web/
+/alembic/
+__pycache__/
+alembic.ini
+reflex.db
