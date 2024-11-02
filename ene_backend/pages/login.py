@@ -39,53 +39,56 @@ def login_single_thirdparty() -> rx.Component:
                     spacing="4",
                     width="100%",
                 ),
-                rx.vstack(
-                    rx.text(
-                        "メールアドレス",
-                        size="3",
-                        weight="medium",
-                        text_align="left",
-                        width="100%",
-                    ),
-                    rx.input(
-                        rx.input.slot(rx.icon("mail")),
-                        placeholder="メールアドレス",
-                        on_blur=AuthState.set_address,
-                        type="email",
-                        size="3",
-                        width="100%",
-                    ),
-                    justify="start",
-                    spacing="2",
-                    width="100%",
-                ),
-                rx.vstack(
-                    rx.hstack(
-                        rx.text(
-                            "パスワード",
-                            size="3",
-                            weight="medium",
+                rx.form(
+                    rx.vstack(
+                        rx.vstack(
+                            rx.text(
+                                "メールアドレス",
+                                size="3",
+                                weight="medium",
+                                text_align="left",
+                                width="100%",
+                            ),
+                            rx.input(
+                                rx.input.slot(rx.icon("mail")),
+                                placeholder="メールアドレス",
+                                name="address",
+                                type="email",
+                                size="3",
+                                width="100%",
+                            ),
+                            justify="start",
+                            spacing="2",
+                            width="100%",
                         ),
-                        rx.link(
-                            "パスワードを忘れた場合",
-                            href="#",
-                            size="3",
+                        rx.vstack(
+                            rx.hstack(
+                                rx.text(
+                                    "パスワード",
+                                    size="3",
+                                    weight="medium",
+                                ),
+                                justify="between",
+                                width="100%",
+                            ),
+                            rx.input(
+                                rx.input.slot(rx.icon("lock")),
+                                placeholder="パスワード",
+                                name="password",
+                                type="password",
+                                size="3",
+                                width="100%",
+                            ),
+                            spacing="2",
+                            width="100%",
                         ),
-                        justify="between",
+                        rx.button("ログイン", size="3", width="100%", type="submit"),
+                        justify="start",
+                        spacing="4",
                         width="100%",
                     ),
-                    rx.input(
-                        rx.input.slot(rx.icon("lock")),
-                        placeholder="パスワード",
-                        on_blur=AuthState.set_password,
-                        type="password",
-                        size="3",
-                        width="100%",
-                    ),
-                    spacing="2",
-                    width="100%",
+                    on_submit=AuthState.login_submit,
                 ),
-                rx.button("ログイン", size="3", width="100%", on_click=AuthState.login),
                 rx.center(
                     rx.text(
                         "新規登録は",

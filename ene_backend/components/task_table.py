@@ -17,7 +17,7 @@ def show_task(task: Task):
         rx.table.cell(task.name),
         rx.table.cell(task.priority),
         rx.table.cell(task.category),
-        rx.table.cell(task.deadline_convert),
+        rx.table.cell(task.deadline_convert, color=task.color),
         rx.table.cell(
             rx.dialog.root(
                 rx.dialog.trigger(

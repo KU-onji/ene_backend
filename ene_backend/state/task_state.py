@@ -47,7 +47,10 @@ class TaskTableState(AuthState):
     def complete_task(self, task: Task):
         with rx.session() as session:
             delete_task = session.exec(select(Task).where(Task.id == task["id"])).first()
-            session.delete(delete_task)
+            if delete_task is not None:
+                session.delete(delete_task)
+            else:
+                raise RuntimeError("The instance is already deleted from database.")
             session.commit()
         self.load_entries()
 
@@ -77,17 +80,19 @@ class TaskTableState(AuthState):
         for task in self.comp_tasks:
             sum_duration += int(task.hour) * 60 + int(task.minute)
         return min(int((sum_duration / 720) * 100), 100)
-        # return min(int((sum_duration / 300) * 100), 100) # for demo
 
     def update_task(self, input_dict: dict):
         if input_alert(input_dict):
             return rx.window_alert("必要な項目が入力されていません")
+        if datetime.fromisoformat(input_dict["deadline"]) < datetime.now():
+            return rx.window_alert("締切日時は現在時刻より後の日時を指定してください")
         deadline = input_dict["deadline"]
         deadline = deadline.replace("-", "/").replace("T", " ")
         input_dict["deadline_convert"] = deadline
         if not validate_time(input_dict["hour"], input_dict["minute"]):
             return rx.window_alert("所要時間の形式が正しくありません")
         input_dict["user_id"] = self.user_id
+        input_dict["color"] = "black"
         self.current_task.update(input_dict)
         with rx.session() as session:
             task = session.exec(select(Task).where(Task.id == self.current_task["id"])).first()
@@ -108,12 +113,15 @@ class TaskTableState(AuthState):
     def add_task_to_db(self, input_dict: dict):
         if input_alert(input_dict):
             return rx.window_alert("必要な項目が入力されていません")
+        if datetime.fromisoformat(input_dict["deadline"]) < datetime.now():
+            return rx.window_alert("締切日時は現在時刻より後の日時を指定してください")
         deadline = input_dict["deadline"]
         deadline = deadline.replace("-", "/").replace("T", " ")
         input_dict["deadline_convert"] = deadline
         if not validate_time(input_dict["hour"], input_dict["minute"]):
             return rx.window_alert("所要時間の形式が正しくありません")
         input_dict["user_id"] = self.user_id
+        input_dict["color"] = "black"
         self.current_task = input_dict
         with rx.session() as session:
             session.add(Task(**self.current_task))
@@ -131,7 +139,9 @@ class TaskTableState(AuthState):
     def load_entries(self) -> list[Task]:
         """Get all users from the database."""
         with rx.session() as session:
+            session.expire_on_commit = False
             query = select(Task).where(Task.user_id == self.user_id)
+
             if self.search_value != "":
                 search_value = f"%{self.search_value.lower()}%"
                 query = query.where(
@@ -149,6 +159,16 @@ class TaskTableState(AuthState):
                     query = query.order_by(Task.deadline)
 
             self.tasks = session.exec(query).all()
+
+            for task in self.tasks:
+                if datetime.now() > datetime.fromisoformat(task.deadline):
+                    task.color = "red"
+                    session.add(task)  # 変更をマーク
+                    session.commit()
+                elif datetime.now() + timedelta(days=1) > datetime.fromisoformat(task.deadline):
+                    task.color = "orange"
+                    session.add(task)
+                    session.commit()
         self.comp_load_entries()
 
     @rx.var
