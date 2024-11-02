@@ -115,6 +115,7 @@ class AuthState(ThemeState):
                 address=self.address,
                 password=bcrypt.hashpw(self.password.encode("utf-8"), bcrypt.gensalt()),
                 name=self.name,
+                google=self.login_w_ggl,
             )
             session.add(self.user)
             session.expire_on_commit = False
@@ -141,7 +142,7 @@ class AuthState(ThemeState):
     def update_profile(self, profile: dict):
         with rx.session() as session:
             user = session.exec(select(User).where(User.address == self.address)).first()
-            if profile["address"] != "":
+            if "address" in profile and profile["address"] != "":
                 self.address = profile["address"]
                 user.address = self.address
             if profile["name"] != "":
@@ -165,4 +166,5 @@ class AuthState(ThemeState):
         self.name = self.tokeninfo["name"]
         self.password = self.tokeninfo["sub"]
         self.confirm_password = self.tokeninfo["sub"]
+        self.login_w_ggl = True
         return self.signup()

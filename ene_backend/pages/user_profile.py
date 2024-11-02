@@ -25,9 +25,12 @@ def profile() -> rx.Component:
                             size="5",
                         ),
                     ),
-                    rx.input(
-                        placeholder="新しいメールアドレス",
-                        name="address",
+                    rx.cond(
+                        ~AuthState.login_w_ggl,
+                        rx.input(
+                            placeholder="新しいメールアドレス",
+                            name="address",
+                        ),
                     ),
                     rx.hstack(
                         rx.text(

@@ -7,6 +7,7 @@ class User(rx.Model, table=True):
     address: str
     password: str
     name: str
+    google: bool
 
 
 class Task(rx.Model, table=True):
