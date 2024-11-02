@@ -80,7 +80,6 @@ class TaskTableState(AuthState):
         for task in self.comp_tasks:
             sum_duration += int(task.hour) * 60 + int(task.minute)
         return min(int((sum_duration / 720) * 100), 100)
-        # return min(int((sum_duration / 300) * 100), 100) # for demo
 
     def update_task(self, input_dict: dict):
         if input_alert(input_dict):

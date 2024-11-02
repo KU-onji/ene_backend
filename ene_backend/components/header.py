@@ -6,6 +6,7 @@ import reflex as rx
 from ene_backend import styles
 
 from ..state.auth import AuthState
+from ..state.chat_state import ChatState
 
 
 class CurrentTimeState(rx.State):
@@ -50,7 +51,10 @@ def logout_dialog():
                     rx.button(
                         "ログアウト",
                         color_scheme="red",
-                        on_click=AuthState.logout,
+                        on_click=[
+                            ChatState.reflesh,
+                            AuthState.logout,
+                        ],
                     ),
                 ),
                 spacing="3",
