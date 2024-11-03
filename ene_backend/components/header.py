@@ -6,6 +6,7 @@ import reflex as rx
 from ene_backend import styles
 
 from ..state.auth import AuthState
+from ..state.chat_state import ChatState
 
 
 class CurrentTimeState(rx.State):
@@ -33,12 +34,47 @@ class CurrentTimeState(rx.State):
     #    return self.refresh()
 
 
+class DialogState(rx.State):
+    dialog_open: bool = False
+
+    def set_dialog_open(self, value: bool):
+        self.dialog_open = value
+
+
+def logout_dialog():
+    return rx.alert_dialog.root(
+        rx.alert_dialog.content(
+            rx.alert_dialog.title("ログアウトしますか？"),
+            rx.flex(
+                rx.alert_dialog.cancel(rx.button("キャンセル", color_scheme="gray")),
+                rx.alert_dialog.action(
+                    rx.button(
+                        "ログアウト",
+                        color_scheme="red",
+                        on_click=[
+                            ChatState.reflesh,
+                            AuthState.logout,
+                        ],
+                    ),
+                ),
+                spacing="3",
+                margin_top="16px",
+                justify="end",
+            ),
+            style={"width": "300px"},
+        ),
+        open=DialogState.dialog_open,
+        on_open_change=DialogState.set_dialog_open(False),
+    )
+
+
 def navi_bar() -> rx.Component:
     """Navigation bar for each page of the app.
 
     Returns:
         The navigation bar component.
     """
+
     return rx.box(
         rx.hstack(
             # Logo (tentative)
@@ -76,14 +112,23 @@ def navi_bar() -> rx.Component:
                     color=rx.color_mode_cond("white", "black"),
                 ),
                 rx.spacer(),
-                rx.button(
-                    rx.icon(tag="settings"),
-                    variant="solid",
-                    size="4",
-                    on_click=rx.redirect("/user_profile"),
-                    color_scheme="iris",
-                    border_radius=styles.border_radius,
+                rx.menu.root(
+                    rx.menu.trigger(
+                        rx.button(
+                            rx.icon(tag="settings"),
+                            variant="solid",
+                            size="4",
+                            color_scheme="iris",
+                            border_radius=styles.border_radius,
+                        ),
+                    ),
+                    rx.menu.content(
+                        rx.menu.item("プロフィールを編集", on_click=rx.redirect("/user_profile")),
+                        rx.menu.item("ログアウト", on_click=DialogState.set_dialog_open(True), color="red"),
+                    ),
                 ),
+                logout_dialog(),
+                aline="center",
             ),
             align="center",
             justify="between",

@@ -1,13 +1,19 @@
 """The Login Page"""
 
+import os
+
 import reflex as rx
 
 from ene_backend.components.header import CurrentTimeState
 from ene_backend.state.auth import AuthState
 from ene_backend.templates import template
 
+from ..react_oauth_google import GoogleLogin, GoogleOAuthProvider
 
-@template(route="/", title="ログイン", on_load=CurrentTimeState.update_time())
+CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+
+
+@template(route="/", title="ログイン", navi=False, on_load=CurrentTimeState.update_time())
 def login_single_thirdparty() -> rx.Component:
     return rx.center(
         rx.card(
@@ -33,53 +39,56 @@ def login_single_thirdparty() -> rx.Component:
                     spacing="4",
                     width="100%",
                 ),
-                rx.vstack(
-                    rx.text(
-                        "メールアドレス",
-                        size="3",
-                        weight="medium",
-                        text_align="left",
-                        width="100%",
-                    ),
-                    rx.input(
-                        rx.input.slot(rx.icon("mail")),
-                        placeholder="メールアドレス",
-                        on_blur=AuthState.set_address,
-                        type="email",
-                        size="3",
-                        width="100%",
-                    ),
-                    justify="start",
-                    spacing="2",
-                    width="100%",
-                ),
-                rx.vstack(
-                    rx.hstack(
-                        rx.text(
-                            "パスワード",
-                            size="3",
-                            weight="medium",
+                rx.form(
+                    rx.vstack(
+                        rx.vstack(
+                            rx.text(
+                                "メールアドレス",
+                                size="3",
+                                weight="medium",
+                                text_align="left",
+                                width="100%",
+                            ),
+                            rx.input(
+                                rx.input.slot(rx.icon("mail")),
+                                placeholder="メールアドレス",
+                                name="address",
+                                type="email",
+                                size="3",
+                                width="100%",
+                            ),
+                            justify="start",
+                            spacing="2",
+                            width="100%",
                         ),
-                        rx.link(
-                            "パスワードを忘れた場合",
-                            href="#",
-                            size="3",
+                        rx.vstack(
+                            rx.hstack(
+                                rx.text(
+                                    "パスワード",
+                                    size="3",
+                                    weight="medium",
+                                ),
+                                justify="between",
+                                width="100%",
+                            ),
+                            rx.input(
+                                rx.input.slot(rx.icon("lock")),
+                                placeholder="パスワード",
+                                name="password",
+                                type="password",
+                                size="3",
+                                width="100%",
+                            ),
+                            spacing="2",
+                            width="100%",
                         ),
-                        justify="between",
+                        rx.button("ログイン", size="3", width="100%", type="submit"),
+                        justify="start",
+                        spacing="4",
                         width="100%",
                     ),
-                    rx.input(
-                        rx.input.slot(rx.icon("lock")),
-                        placeholder="パスワード",
-                        on_blur=AuthState.set_password,
-                        type="password",
-                        size="3",
-                        width="100%",
-                    ),
-                    spacing="2",
-                    width="100%",
+                    on_submit=AuthState.login_submit,
                 ),
-                rx.button("ログイン", size="3", width="100%", on_click=AuthState.login),
                 rx.center(
                     rx.text(
                         "新規登録は",
@@ -102,17 +111,15 @@ def login_single_thirdparty() -> rx.Component:
                     align="center",
                     width="100%",
                 ),
-                rx.button(
-                    rx.image(
-                        src="/google.svg",
-                        width="1.5em",
-                        height="auto",
-                        border_radius="25%",
+                rx.vstack(
+                    rx.center(
+                        GoogleOAuthProvider.create(
+                            GoogleLogin.create(on_success=AuthState.on_success_login),
+                            client_id=CLIENT_ID,
+                        ),
                     ),
-                    "Googleでログイン",
-                    variant="outline",
-                    size="3",
                     width="100%",
+                    align="center",
                 ),
                 spacing="6",
                 width="100%",

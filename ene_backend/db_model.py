@@ -7,6 +7,7 @@ class User(rx.Model, table=True):
     address: str
     password: str
     name: str
+    google: bool
 
 
 class Task(rx.Model, table=True):
@@ -19,6 +20,7 @@ class Task(rx.Model, table=True):
     hour: str
     minute: str
     memo: str
+    color: str
 
 
 class CompleteTask(rx.Model, table=True):
